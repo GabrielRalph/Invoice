@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Draw</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="Invoice" content="Invoice something">
+  <body>
+    <div id = "add" class = "btn">
+      +
+    </div>
+    <div id = "remove" class = "btn">
+      -
+    </div>
+    <div id = "print" class = "btn">
+      save
+    </div>
+    <div id = "page">
+      <h1>Invoice</h1>
+      <table>
+        <tr>
+          <td>
+            <h2 id = "my-name">Maeve Ralph</h2>
+          </td>
+          <td>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h4 id = "my-address">34 The Parade</h4>
+          </td>
+          <td>
+            <h4 id = "my-number">0400 000 000</h4>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h4 id = "my-city">Dulwich Hill, 2302</h4>
+          </td>
+          <td>
+            <h4 id = "my-email">maeve@gmail.com</h4>
+          </td>
+        </tr>
+      </table>
+
+      <table>
+        <tr>
+          <td class = "btm-line">
+            <h2>Invoice Recipient</h2>
+          </td>
+          <td class = "btm-line">
+            <h4 id = "date" style = "float: right">Date 21 Jun 2020</h4>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h3 id = "biller-name">The Commercial</h3>
+          </td>
+          <td>
+            <h4 id = "biller-number">0400 000 000</h4>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h4 id = "biller-address">4 Jabz st</h4>
+          </td>
+          <td>
+            <h4 id = "biller-email">tcg@gmaill</h4>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h4 id = "biller-city">Marrickville 2402</h4>
+          </td>
+          <td>
+          </td>
+        </tr>
+      </table>
+
+      <table id = "items">
+        <tr class = "ctr-lines">
+          <td class = "btm-line" style = "width: 50%">
+            <h2>Description</h2>
+          </td>
+          <td class = "btm-line" style = "width: 20%">
+            <h2>Date</h2>
+          </td>
+          <td class = "btm-line" style = "width: 10%">
+            <h2>Rate</h2>
+          </td>
+          <td class = "btm-line" style = "width: 10%">
+            <h2>Qty</h2>
+          </td>
+          <td class = "btm-line" style = "width: 10%">
+            <h2>Total</h2>
+          </td>
+        </tr>
+
+      </table>
+
+      <table>
+
+        <tr>
+          <td class = "btm-line" style = "width: 50%">
+            <h2>Payment Method</h2>
+          </td>
+          <td class = "btm-line" style = "width: 50%">
+          </td>
+        </tr>
+
+        <tr class = "ctr-lines">
+          <td>
+            <h3>BSB</h3>
+          </td>
+          <td>
+            <h4 id = "my-BSB">21/4/2222</h4>
+          </td>
+        </tr>
+
+        <tr class = "ctr-lines">
+          <td>
+            <h3>Account Number</h3>
+          </td>
+          <td>
+            <h4 id = "my-accnum">21/4/2222</h4>
+          </td>
+        </tr>
+
+        <tr class = "ctr-lines">
+          <td>
+            <h3>ABN</h3>
+          </td>
+          <td>
+            <h4 id = "my-ABN">21/4/2222</h4>
+          </td>
+        </tr>
+
+      </table>
+
+    </div>
+    <div class = "form-window" id = "forms">
+      <div id = "myInfoForm" class = "form">
+        <h1>Add Your Info</h1>
+        <h4>This will be used to add your details to the invoice</h4>
+        <br />
+        <h3>Name</h3><input type="text" id = 'i-my-name'/>
+        <br />
+        <br />
+        <h3>Number</h3><input type="text" id = 'i-my-number'/>
+        <br />
+        <br />
+        <h3>Email</h3><input type="text" id = "i-my-email"/>
+        <br />
+        <br />
+        <br />
+        <br />
+        <h3>Address</h3><input type="text" id = "i-my-address"/>
+        <br />
+        <br />
+        <h3>City</h3><input type="text" id = "i-my-city"/>
+        <br />
+        <br />
+        <br />
+        <br />
+        <h3>BSB</h3><input type="text" id = "i-my-BSB"/>
+        <br />
+        <br />
+        <h3>Account Number</h3><input type="text" id = "i-my-accnum"/>
+        <br />
+        <br />
+        <h3>ABN</h3><input type="text" id = "i-my-ABN"/>
+        <br />
+        <h6>Submit</h6>
+      </div>
+      <div id = "billerInfoForm" class = "form">
+        <h1>Add Their Info</h1>
+        <h4>This will be used to add the details of the person the invoice is to</h4>
+        <br />
+        <h3>Name</h3><input type="text" id = "i-biller-name"/>
+        <br />
+        <br />
+        <h3>Number</h3><input type="text" id = "i-biller-number"/>
+        <br />
+        <br />
+        <h3>Email</h3><input type="text" id = "i-biller-email"/>
+        <br />
+        <br />
+        <br />
+        <br />
+        <h3>Address</h3><input type="text" id = "i-biller-address"/>
+        <br />
+        <br />
+        <h3>City</h3><input type="text" id = "i-biller-city"/>
+        <br />
+        <h6>Submit</h6>
+      </div>
+
+      <div id = "addItemForm" class = "form">
+        <h1>Add an Item</h1>
+        <h4>This will add an invoice item</h4>
+        <br />
+        <h3>Description</h3><input type="text" id = "i-item-description"/>
+        <br />
+        <br />
+        <h3>Date</h3><input type="text" id = "i-item-date"/>
+        <br />
+        <br />
+        <h3>Rate</h3><input type="text" id = "i-item-rate"/>
+        <br />
+        <br />
+        <h3>Qty</h3><input type="text" id = "i-item-qty"/>
+        <br />
+        <h6>Submit</h6>
+      </div>
+    </div>
+  </body>
+  <script type = "text/javascript">
+    class MyInvoice{
+      constructor(){
+        this.myInfo = {
+          name: document.getElementById('my-name'),
+          address: document.getElementById('my-address'),
+          city: document.getElementById('my-city'),
+          number: document.getElementById('my-number'),
+          email: document.getElementById('my-email'),
+          BSB: document.getElementById('my-BSB'),
+          accnum: document.getElementById('my-accnum'),
+          ABN: document.getElementById('my-ABN')
+        }
+        this.myInfoInput = {
+          name: document.getElementById('i-my-name'),
+          address: document.getElementById('i-my-address'),
+          city: document.getElementById('i-my-city'),
+          number: document.getElementById('i-my-number'),
+          email: document.getElementById('i-my-email'),
+          BSB: document.getElementById('i-my-BSB'),
+          accnum: document.getElementById('i-my-accnum'),
+          ABN: document.getElementById('i-my-ABN')
+        }
+        this.billerInfo = {
+          name: document.getElementById('biller-name'),
+          address: document.getElementById('biller-address'),
+          city: document.getElementById('biller-city'),
+          number: document.getElementById('biller-number'),
+          email: document.getElementById('biller-email')
+        }
+        this.billerInfoInput = {
+          name: document.getElementById('i-biller-name'),
+          address: document.getElementById('i-biller-address'),
+          city: document.getElementById('i-biller-city'),
+          number: document.getElementById('i-biller-number'),
+          email: document.getElementById('i-biller-email')
+        }
+        this.addItemInput = {
+          description: document.getElementById('i-item-description'),
+          date: document.getElementById('i-item-date'),
+          rate: document.getElementById('i-item-rate'),
+          qty: document.getElementById('i-item-qty')
+        }
+        this.date = document.getElementById('date')
+        this.itemsTable = document.getElementById('items')
+        this.myInfoForm = document.getElementById('myInfoForm')
+        this.billerInfoForm = document.getElementById('billerInfoForm')
+        this.addItemForm = document.getElementById('addItemForm')
+        this.forms = document.getElementById('forms')
+        this.functionBuffer = []
+        this.setmode = false
+        this.hideForms()
+        this.setDate()
+      }
+
+      hideForms(){
+        this.forms.style.setProperty('display', 'none')
+        this.myInfoForm.style.setProperty('display', 'none')
+        this.addItemForm.style.setProperty('display', 'none')
+        this.billerInfoForm.style.setProperty('display', 'none')
+      }
+
+      showForm(form){
+        this.forms.style.setProperty('display', 'block')
+        form.style.setProperty('display', 'block')
+      }
+
+      setDate(){
+        var dateNow = `${new Date()}`
+        dateNow = `${dateNow.split(' ')[1]} ${dateNow.split(' ')[2]} ${dateNow.split(' ')[3]}`
+        this.date.innerHTML = dateNow
+      }
+      setMyInfo(){
+        if (this.setmode){
+          this.functionBuffer.push('setMyInfo')
+          return
+        }else{
+          this.setmode = true
+          this.showForm(this.myInfoForm)
+          let submit = this.myInfoForm.getElementsByTagName('H6')[0]
+          submit.onclick = () => {
+            for (var key in this.myInfoInput){
+              if(this.myInfoInput[key].value.length < 1){
+                alert(`${key} has been left blank`)
+                return
+              }
+              this.myInfo[key].innerHTML = this.myInfoInput[key].value
+            }
+            this.myInfoForm.style.setProperty('display', 'none')
+            this.hideForms()
+            this.setmode = false
+            if (this.functionBuffer.length > 0){
+              let f = this.functionBuffer.shift()
+              this[f]()
+            }
+          }
+        }
+      }
+      setBillerInfo(){
+        if (this.setmode){
+          this.functionBuffer.push('setBillerInfo')
+          return
+        }else{
+          this.setmode = true
+          this.showForm(this.billerInfoForm)
+          let submit = this.billerInfoForm.getElementsByTagName('H6')[0]
+          submit.onclick = () => {
+            for (var key in this.billerInfoInput){
+              if(this.billerInfoInput[key].value.length < 1){
+                alert(`${key} has been left blank`)
+                return
+              }
+              this.billerInfo[key].innerHTML = this.billerInfoInput[key].value
+            }
+            this.billerInfoForm.style.setProperty('display', 'none')
+            this.hideForms()
+            this.setmode = false
+
+            if (this.functionBuffer.length > 0){
+              let f = this.functionBuffer.shift()
+              this[f]()
+            }
+          }
+        }
+      }
+      removeLastItem(){
+        let items = this.itemsTable.children
+        this.itemsTable.removeChild(items[items.length - 1])
+      }
+      addItem(){
+        if (this.setmode){
+          this.functionBuffer.push('addItem')
+          return
+        }else{
+          this.setmode = true
+          this.showForm(this.addItemForm)
+          let submit = this.addItemForm.getElementsByTagName('H6')[0]
+          submit.onclick = () => {
+            console.log('ss');
+            for (var key in this.addItemInput){
+              if (this.addItemInput[key].value.length < 1){
+                alert(`${key} has been left blank`)
+                return
+              }
+            }
+            let row = document.createElement('TR')
+            row.setAttribute('class','ctr-lines')
+            row.innerHTML = `<td>
+            <h4>${this.addItemInput.description.value}</h4>
+            </td>
+            <td>
+            <h4>${this.addItemInput.date.value}</h4>
+            </td>
+            <td>
+            <h4>$${this.addItemInput.rate.value}</h4>
+            </td>
+            <td>
+            <h4>${this.addItemInput.qty.value}</h4>
+            </td>
+            <td>
+            <h4>$${parseFloat(this.addItemInput.rate.value)*parseFloat(this.addItemInput.qty.value)}</h4>
+            </td>`
+            this.itemsTable.appendChild(row)
+
+            this.hideForms()
+            this.setmode = false
+
+            if (this.functionBuffer.length > 0){
+              let f = this.functionBuffer.shift()
+              this[f]()
+            }
+          }
+        }
+      }
+    }
+
+    let newInvoice = new MyInvoice()
+    newInvoice.setMyInfo()
+    newInvoice.setBillerInfo()
+
+    let add = document.getElementById('add')
+    add.onclick = () => {newInvoice.addItem()}
+
+    let remove = document.getElementById('remove')
+    remove.onclick = () => {newInvoice.removeLastItem()}
+
+    let print = document.getElementById('print')
+    print.onclick = () => {window.print()}
+  </script>
+  <style type = "text/css">
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+    body{
+      margin: 20mm 0;
+      background: rgb(30,30,30);
+      font-family: 'Roboto'
+
+    }
+    /* td{
+      width: 50%;
+    } */
+    table{
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+    h4{
+      font-weight: 400;
+      margin: 0;
+    }
+    h3{
+      font-weight: 500;
+      margin: 0;
+      font-size: 16px;
+
+    }
+    h2{
+      margin: 0;
+      font-size: 18px;
+    }
+    h1{
+      font-size: 50px;
+      margin: 5mm 0;
+    }
+    input{
+      background: rgba(255,255,255,0);
+      outline: none;
+      border: 2px solid black;
+      border-radius: 50px;
+      padding: 5px;
+      margin-left: -7px;
+    }
+    h6{
+      font-size: 18px;
+      border: 2px solid black;
+      padding: 5px 10px;
+      border-radius: 50px;
+      float: left;
+      user-select: none;
+      cursor: pointer;
+      /* position: absolute;
+      right: 100px;
+      top: 100px; */
+    }
+    td{
+      padding: 1mm 0;
+    }
+    .btm-line{
+      border-bottom: 1.5px solid black;
+    }
+    .ctr-lines > td{
+      padding-left: 10px;
+      border-right: 1.5px solid black;
+    }
+    .ctr-lines > td:last-child{
+      border-right: none;
+    }
+    .ctr-lines > td:first-child{
+      padding-left: 0;
+    }
+
+    #page{
+      padding: 15mm;
+      width: 180mm;
+      height: 267mm;
+      background: white;
+      margin: auto;
+    }
+    #myInfo{
+      display: none;
+    }
+    #billerInfo{
+      display: none;
+    }
+    #addItem{
+      display: none;
+    }
+    .form-window{
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      backdrop-filter: blur(20px);
+    }
+    .form{
+      /* background:rgb(240,240,255); */
+      width: 70%;
+      height: 70%;
+      margin: 70px auto;
+
+    }
+    .btn{
+      position: fixed;
+      border-radius: 50px;
+      border: 2px solid grey;
+      width: 30px;
+      height: 30px;
+      color: grey;
+      line-height: 30px;
+      text-align: center;
+      user-select: none;
+      cursor: pointer;
+    }
+    #add{
+      top: 20px;
+      right: 20px;
+    }
+    #remove{
+      top: 70px;
+      right: 20px;
+    }
+    #print{
+      top: 20px;
+      right: 70px;
+      width: 60px;
+    }
+    @media print{
+      body{
+        background: white;
+      }
+      body * {
+        visibility: hidden;
+        background: white;
+      }
+      #page, #page * {
+        visibility: visible;
+      }
+      #page {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+    }
+  </style>
+
+</html>
