@@ -16,11 +16,10 @@
   <body>
     <div v-if = "show" id = "invoice">
 
-      <icon size = "2" :pos = "{x: '1em', y: '1em'}" @click = "show_form = 'biller-form'">{{biller.photoURL}}</icon>
-      <icon size = "2" :pos = "{x: '1em', y: '5em'}" @click = "save">save</icon>
+
 
       <div v-if = "show_form != false" id = "form">
-        <icon :pos = "{x: '1em', y: '1em'}" size = "2" @click = "show_form = false">return</icon>
+        <icon :pos = "{x: '1vw', y: '0.3vw'}" @click = "show_form = false">return</icon>
 
         <biller-form v-if = "show_form == 'biller-form'" v-model = "biller" @input = "show_form = false"></biller-form>
         <add-recipient v-if = "show_form == 'add-recipient'" v-model = "recipient" @input = "show_form = false"></add-recipient>
@@ -28,28 +27,42 @@
       </div>
 
       <div id = "page">
-        <h1>Invoice</h1>
-        <h4>{{date}}</h4>
+        <table v-if = "edit" id = "buttons">
+          <tr>
+            <td>
+              <icon v-if = "edit" @click = "show_form = 'biller-form'">{{biller.photoURL}}</icon>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <icon v-if = "edit" @click = "save">save</icon>
+            </td>
+          </tr>
+        </table>
+        <div class = "header">
+          <h1>Invoice</h1>
+          <h2>{{date}}</h2>
+        </div>
         <table class = "biller">
           <tr>
             <td>
-              <h2>{{biller.displayName}}</h2>
+              {{biller.displayName}}
             </td>
             <td>
-              <h4>{{biller.email}}</h4>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <h4>{{biller.address}}</h4>
-            </td>
-            <td>
-              <h4>{{biller.phoneNumber}}</h4>
+              {{biller.email}}
             </td>
           </tr>
           <tr>
             <td>
-              <h4>{{biller.city}}</h4>
+              {{biller.address}}
+            </td>
+            <td>
+              {{biller.phoneNumber}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              {{biller.city}}
             </td>
             <td>
             </td>
@@ -59,29 +72,29 @@
         <table class = "recipient">
           <tr>
             <th colspan="2">
-              <h2>Invoice Recipient</h2>
-              <icon @click = "show_form = 'add-recipient'">edit</icon>
+              Invoice Recipient
+              <icon v-if = "edit" @click = "show_form = 'add-recipient'">edit</icon>
             </th>
           </tr>
           <tr>
             <td>
-              <h3>{{recipient.displayName}}</h3>
+              {{recipient.displayName}}
             </td>
             <td>
-              <h4>{{recipient.phoneNumber}}</h4>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <h4>{{recipient.address}}</h4>
-            </td>
-            <td>
-              <h4>{{recipient.email}}</h4>
+              {{recipient.phoneNumber}}
             </td>
           </tr>
           <tr>
             <td>
-              <h4>{{recipient.city}}</h4>
+              {{recipient.address}}
+            </td>
+            <td>
+              {{recipient.email}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              {{recipient.city}}
             </td>
             <td>
             </td>
@@ -92,55 +105,55 @@
           <thead>
             <tr>
               <th style = "width: 50%">
-                <h2 ref = "description_h2">Description</h2>
+                Description
               </th>
               <th style = "width: 20%">
-                <h2>Date</h2>
+                Date
               </th>
               <th style = "width: 10%">
-                <h2>Rate</h2>
+                Rate
               </th>
               <th style = "width: 10%">
-                <h2>Qty</h2>
+                Qty
               </th>
               <th style = "width: 10%">
-                <h2>Total</h2>
+                Total
               </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for = "(item, i) in items">
               <td @dblclick = "remove_item(i)">
-                <h4>{{item.description}}</h4>
-                <icon @click = "remove_item(i)">delete</icon>
+                {{item.description}}
+                <icon v-if = "edit" @click = "remove_item(i)">delete</icon>
               </td>
               <td>
-                <h4>{{item.date}}</h4>
+                {{item.date}}
               </td>
               <td>
-                <h4>${{item.rate}}</h4>
+                ${{item.rate}}
               </td>
               <td>
-                <h4>{{item.qty}}</h4>
+                {{item.qty}}
               </td>
               <td>
-                <h4>${{item.qty * item.rate}}</h4>
+                ${{item.qty * item.rate}}
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <td colspan = "4">
-                <icon float = "left" @click = "show_form = 'add-item-form'">add</icon>
-              </td>
-              <td></td></tr>
+              <th colspan = "4">
+                <icon v-if = "edit" float = "left" @click = "show_form = 'add-item-form'">add</icon>
+              </th>
+              <th></th></tr>
             <tr>
               <td colspan="4">
 
-                <h3>Grand Total</h3>
+                Grand Total
               </td>
               <td>
-                <h3>${{total}}</h3>
+                ${{total}}
               </td>
             </tr>
           </tfoot>
@@ -148,37 +161,37 @@
 
         <table class = "payment-method">
           <tr>
-            <td class = "btm-line" style = "width: 50%">
-              <h2>Payment Method</h2>
+            <th style = "width: 50%">
+              Payment Method
+            </th>
+            <th style = "width: 50%">
+            </th>
+          </tr>
+
+          <tr class = "ctr-lines">
+            <td>
+              BSB</h3>
             </td>
-            <td class = "btm-line" style = "width: 50%">
+            <td>
+              {{biller.bsb}}
             </td>
           </tr>
 
           <tr class = "ctr-lines">
             <td>
-              <h3>BSB</h3>
+              Account Number
             </td>
             <td>
-              <h4>{{biller.bsb}}</h4>
-            </td>
-          </tr>
-
-          <tr class = "ctr-lines">
-            <td>
-              <h3>Account Number</h3>
-            </td>
-            <td>
-              <h4>{{biller.accountNo}}</h4>
+              {{biller.accountNo}}
             </td>
           </tr>
 
           <tr class = "ctr-lines">
             <td>
-              <h3>ABN</h3>
+              ABN
             </td>
             <td>
-              <h4>{{biller.abn}}</h4>
+              {{biller.abn}}
             </td>
           </tr>
         </table>
@@ -211,29 +224,36 @@
           phoneNumber: 'Recipient Number',
         },
 
-        items: [],
+        items: [{
+          description: 'Something done',
+          date: 'at some time',
+          rate: '50',
+          qty: '5'
+        }],
         show: false,
         _date: null,
         show_form: false,
+        edit: true,
+        margin: '3vw',
       },
-
+      watch: {
+        margin: function(){
+          document.body.style.setProperty('--margin', this.margin)
+        }
+      },
       methods: {
         save: function(){
-          let content = document.getElementById('page');
-          let print_page = document.createElement('div');
-          print_page.setAttribute('style', 'position: fixed; top: 0; left: 0; height: 297mm; width: 210mm; z-index: 100; background: white:margin: 0');
-          document.body.setAttribute('style', 'position: fixed; top: 0; left: 0; height: 297mm; width: 210mm; z-index: 100; background: white:margin: 0');
-          print_page.innerHTML = content.outerHTML;
-          let icons = print_page.getElementsByClassName('icon');
+          this.edit = false;
+          this.margin = "0vw";
+          setTimeout(() => {
+            window.print();
+            // this.edit = true;
+            if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ){
 
-          while (icons.length != 0){
-            icons[0].remove()
-          }
-          document.body.appendChild(print_page)
-          window.print();
-          document.body.setAttribute('style', '');
-
-          print_page.remove();
+            }else{
+              this.margin = '3vw';
+            }
+          }, 20)
 
         },
         remove_item: function(i){
@@ -287,113 +307,215 @@
   <style type = "text/css">
   body{
     font-family: 'Roboto';
-    background: #111115;
-    font-size: 15px;
-    margin: 1em;
-    max-height: 297mm;
+    background: #313137;
+    font-size: 1.61vw;
+    --margin: 3vw;
+    --padding: 10vw;
+    margin: var(--margin);
+
   }
-    .btn-line{
-      border-bottom: 3px solid black;
-    }
-    .top-line{
-      border-bottom: 2px solid black;
-    }
+  body::-webkit-scrollbar{
+    display: none;
+  }
+
 
     #page{
-      --padding: 20mm;
-      width: calc(210mm - 2*var(--padding));
-      height: calc(297mm - 2*var(--padding));
+      --table-line: 0.2vw;
+      --table-h-line: var(--table-line);
+      --border-color: #333335;
+      --width: calc(100vw - 2*var(--margin));
+      width: calc(var(--width) - 2*var(--padding));
+      height: calc(1.4142857*var(--width) - 2*var(--padding));
       background: white;
-      margin: auto;
-      padding: var(--padding);
       position: relative;
-    }
-    #page > h4{
-      display: inline;
-      float: right;
-      line-height: 3em;
+      padding: var(--padding);
+      box-shadow: 0 0 var(--margin) var(--margin) #11111877;
     }
 
-    #page h1{
-      margin: 0;
-      font-size: 3em;
-      font-weight: 500;
-      display: inline;
-    }
-    #page h2{
-      margin: 0.2em 0;
-      text-align: left;
-      font-weight: 500;
-      display: inline;
+    .header{
       float: left;
+      margin-bottom: 10vw;
     }
-    #page h3{
+    /* Date and title */
+    h1, h2{
+      margin: 0;
       font-weight: 500;
     }
-    #page h4, h3{
-      margin: 0.25em 0;
-      font-weight: 400;
-      display: inline;
+    /* date */
+    h2{
+      float: left;
+      font-size: 1.2em;
     }
-    .recipient th, .items th, .items tfoot tr:first-child td, .payment-method tr:first-child td{
-      border-bottom: 2px solid black;
-      vertical-align: middle;
-    }
-    .biller, .recipient, .items{
-      width: 100%;
-      margin-bottom: 2em;
-      border-collapse: collapse;
-    }
-    .items{
-      margin-top: 7em;
-    }
-    .items td:nth-of-type(n + 2), .items th:nth-of-type(n + 2), .payment-method td:nth-of-type(n + 2){
-      border-left: 2px solid black;
-      padding-left: 1em;
-    }
-    .items td, .items th{
-      padding-right: 1em;
-    }
-    .items h2{
-      font-size: 1em;
-    }
-    .items tfoot tr:first-child td{
-      border-bottom: 0.16em solid black;
-      padding-bottom: 2em;
+    /* title */
+    h1{
+      font-size: 4em;
+      line-height: 0.8em;
+      margin-bottom: 0.3em;
+      /* float: left; */
     }
 
-    .items tfoot:first-of-type{
-      text-align: right;
+
+    /* table header cells */
+    #page th{
+      border-bottom: var(--table-h-line) solid var(--border-color);
+      font-weight: 400;
+      font-size: 1.61em;
+      text-align: left;
     }
-    .payment-method{
+
+    /* table cells */
+    #page td{
+      font-size: 1em;
+      line-height: 1.5em;
+    }
+    #table th, #table td{
+      font-weight: 400;
+
+    }
+
+      .recipient, .items{
+      width: 100%;
       border-collapse: collapse;
-      width: calc(100% - 2*var(--padding));
-      font-size: 0.8em;
+      margin-bottom: 10vw;
+    }
+
+    /* Every table cell or header cell starting from the second */
+    #page tr td:nth-of-type(n + 1), tr th:nth-of-type(n + 1){
+      padding: 0.5vw 1vw;
+    }
+
+    /* every table cell starting from the second */
+    #page tbody tr td:nth-of-type(n + 2){
+      border-left: var(--table-line) solid var(--border-color);
+      font-family: 500;
+    }
+
+    #page tfoot tr td:last-of-type{
+      border-left: var(--table-line) solid var(--border-color);
+      font-weight: 500;
+    }
+    #page tfoot tr td:first-of-type{
+      text-align: right;
+      font-weight: 500;
+    }
+
+    .biller{
+      width: auto;
+      float: right;
+      border-collapse: collapse;
+      margin: 0;
+    }
+
+    .payment-method{
       position: absolute;
       bottom: var(--padding);
+      width: calc(100% - 2*var(--padding));
+      border-collapse: collapse;
     }
-    .payment-method tr:first-of-type td{
-      border-left: none;
+
+    #buttons{
+      position: absolute;
+      top: calc(var(--padding)/2);
+      left: calc(var(--padding)/2);
+      transform: translate(-50%, 0);
+      z-index: 20;
     }
-    .payment-method h4{
-      font-size: 1.3em;
-    }
+
+
+
     td .icon:nth-of-type(n + 1){
       margin-left: 0.3em;
     }
     .icon{
-      float: right;
-      fill: #666;
-      border: 2px solid #666;
-      border-radius: 50%;
-      padding: 0.1em;
-      z-index: 5;
+      transform-origin: center;
     }
-    .icon:hover{
-      /* border-color: #001; */
-      box-shadow: 0 0 3px 3px #6666;
+    #page .icon{
+      font-size: 3vw;
+      float: right;
+      fill: #6676;
+    }
+    #page .icon:hover{
+      transform: scale(2);
+    }
+    #form .icon:hover{
+      transform: scale(1.2);
+      fill: #fffd;
+    }
+    img.icon{
+      border-radius: 50%;
     }
 
+    #form th{
+      padding-bottom: 10vw;
+    }
+    #form .icon{
+      fill: #fff9;
+      font-size: 8vw;
+    }
+
+    #form{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #0019;
+      z-index: 50;
+      -webkit-backdrop-filter: blur(25px);
+      padding-top: 10vw;
+      backdrop-filter: blur(25px);
+      color: white;
+    }
+    #form input, .bubble{
+      border: 2px solid white;
+      background: #0014;
+      color: white;
+      outline: none;
+      font-family: 'Roboto';
+      font-weight: 400;
+      padding: 0.5em;
+      border-radius: 3em;
+      touch-action: none;
+    }
+    #form tr td:last-of-type{
+      padding-left: 2em;
+    }
+    #form input:focus{
+      box-shadow: 0px 0px 3px 3px #5553;
+      background: #fff4;
+    }
+    #form h1{
+      /* margin: 0 0 2em 0; */
+      text-align: left;
+      font-weight: 500;
+    }
+    #form h2{
+      margin: 0.5em 0;
+      font-size: 2em;
+      font-weight: 500;
+
+    }
+    #form table{
+      margin: auto;
+    }
+    .bubble{
+      user-select: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .bubble:hover{
+      box-shadow: 0 0 10px 10px #9995;
+    }
+    @media screen and (max-width: 767px) {
+      input, select, textarea {
+        font-size: 16px;
+      }
+    }
+    @page :first{
+      size: A4;
+      margin: 0;
+    }
+/*
 
     #buttons{
       position: absolute;
@@ -416,56 +538,7 @@
       color: #999;
     }
 
-    #form{
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #fff3;
-      z-index: 10;
-      -webkit-backdrop-filter: blur(25px);
-      padding-top: 5em;
-      backdrop-filter: blur(25px);
-    }
-    #form input{
-      border: 2px solid black;
-      background: #fff8;
-      outline: none;
-      font-family: 'Roboto';
-      font-weight: 400;
-      padding: 0.5em;
-      border-radius: 3em;
-      touch-action: none;
-    }
-    #form tr td:last-of-type{
-      padding-left: 2em;
-    }
-    #form input:focus{
-      box-shadow: 0px 0px 3px 3px #5553;
-      background: #fffd;
-    }
-    #form h1{
-      margin: 0 0 2em 0;
-      text-align: left;
-      font-weight: 500;
-    }
-    #form h2{
-      margin: 0.5em 0;
-      font-weight: 400;
 
-    }
-    #form table{
-      margin: auto;
-    }
-    .bubble{
-      border: 2px solid black;
-      padding: 0.35em;
-      border-radius: 3em;
-      user-select: none;
-      cursor: pointer;
-      font-weight: 500;
-    }
     .sumbit{
       float: right;
       border: 2px solid black;
@@ -481,7 +554,7 @@
     }
     .submit:active {
       background: #5555;
-    }
+    } */
 
   </style>
 

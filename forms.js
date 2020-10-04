@@ -11,10 +11,9 @@ let ICON_SVGS = {
 
   confirm: `<path d="M212.7,363.6L60.2,300.8L231.4,450L439.8,50L212.7,363.6z M195,385l-76-53l88,39L195,385z"/>`,
 
-  save: `<path d="M368.8,99h-74.9v59.4c0,4.7-3.9,8.6-8.6,8.6H159.7c-4.7,0-8.6-3.9-8.6-8.6V99h-19.9C113.5,99,99,113.5,99,131.2v237.6
-  	c0,17.7,14.5,32.2,32.2,32.2h237.6c17.7,0,32.2-14.5,32.2-32.2V131.2C401,113.5,386.5,99,368.8,99z M250,223.6
-  	c14.6,0,26.4,11.8,26.4,26.4s-11.8,26.4-26.4,26.4s-26.4-11.8-26.4-26.4S235.4,223.6,250,223.6z M142,341.9h158.5v6.8H142V341.9z
-  	 M330.8,370.8H142v-7.5h188.8V370.8z M330.8,327H142v-6.8h188.8V327z"/>`
+  save: `<path d="M368.8,99h-74.9v59.4c0,4.7-3.9,8.6-8.6,8.6H159.7c-4.7,0-8.6-3.9-8.6-8.6V99h-19.9C113.5,99,99,113.5,99,131.2v237.6c0,17.7,14.5,32.2,32.2,32.2h237.6c17.7,0,32.2-14.5,32.2-32.2V131.2C401,113.5,386.5,99,368.8,99z M250,223.6c14.6,0,26.4,11.8,26.4,26.4s-11.8,26.4-26.4,26.4s-26.4-11.8-26.4-26.4S235.4,223.6,250,223.6z M142,341.9h158.5v6.8H142V341.9zM330.8,370.8H142v-7.5h188.8V370.8z M330.8,327H142v-6.8h188.8V327z"/>
+  <path style="opacity:0.5;" d="M293.9,99h-4H155.1h-4h-4v59.4c0,6.9,5.6,12.6,12.6,12.6h125.7c6.9,0,12.6-5.6,12.6-12.6V99H293.9z"/>
+  <path style="opacity:0.36;" d="M359.3,108H140.7c-18,0-32.7,14.6-32.7,32.7v218.7c0,18,14.6,32.7,32.7,32.7h218.7c18,0,32.7-14.6,32.7-32.7V140.7C392,122.6,377.4,108,359.3,108z"/>`
 }
 Vue.component('icon', {
   props: {
@@ -61,7 +60,7 @@ Vue.component('icon', {
       }
 
       if (this.pos != null){
-        style += `position: fixed;`
+        style += `position: absolute;`
         if('top' in this.pos){
           this.pos['y'] = this.pos.top
         }
@@ -220,7 +219,7 @@ Vue.component('biller-form', {
       <tr>
         <td></td>
         <td>
-          <icon size = "1.3" float = "right" @click = "update">confirm</icon>
+          <icon float = "right" @click = "update">confirm</icon>
         </td>
       </tr>
     </table>
@@ -308,10 +307,10 @@ Vue.component('add-client-form', {
     </tr>
     <tr>
       <td>
-        <icon size = "1.3" float = "left" @click = "$emit('return')">return</icon>
+        <icon float = "left" @click = "$emit('return')">return</icon>
       </td>
       <td>
-        <icon size = "1.3" float = "right" @click = "add_client">add</icon>
+        <icon float = "right" @click = "add_client">add</icon>
       </td>
     </tr>
   </table>
@@ -342,7 +341,8 @@ Vue.component('add-recipient', {
         city: '',
         email: '',
         phoneNumber: '',
-      }
+      },
+      big: false
     }
   },
   template: `
@@ -351,19 +351,19 @@ Vue.component('add-recipient', {
       <th>
         <h1>Choose A Recipient</h1>
       </th>
-      <td></td>
-      <td>
-        <icon size = "1.3" float = "right" @click = "add = true">add</icon>
-      </td>
+      <td v-if = "big"></td>
+      <th>
+        <icon float = "right" @click = "add = true">add</icon>
+      </th>
     </tr>
     <tr v-for = "client in clients">
       <td @click = "set_recipient(client)">
         <h2 class = "bubble">{{client.displayName}}</h2>
       </td>
-      <td>{{client.email}}</td>
+      <td v-if = "big">{{client.email}}</td>
       <td>
-        <icon size = "1.3" float = "right" @click = "edit(client)">edit</icon>
-        <icon size = "1.3" float = "right" @click = "delete_client(client)">delete</icon>
+        <icon float = "right" @click = "edit(client)">edit</icon>
+        <icon float = "right" @click = "delete_client(client)">delete</icon>
 
       </td>
     </tr>
@@ -426,7 +426,7 @@ Vue.component('add-item-form', {
         rate: rate,
         qty: qty,
       })
-    },
+    }
   },
   template: `
   <table>
@@ -472,7 +472,7 @@ Vue.component('add-item-form', {
 
       </td>
       <td>
-        <icon size = "1.3" float = "right" @click = "add_item">add</icon>
+        <icon float = "right" @click = "add_item">add</icon>
       </td>
     </tr>
   </table>
