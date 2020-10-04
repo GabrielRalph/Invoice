@@ -6,555 +6,483 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="Invoice" content="Invoice something">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src= "https://www.gstatic.com/firebasejs/7.14.4/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
+  <script src="./forms.js"></script>
+  <script src= "./config.js"></script>
+
   <body>
-    <div id = "add" class = "btn">
-      +
-    </div>
-    <div id = "remove" class = "btn">
-      -
-    </div>
-    <div id = "print" class = "btn">
-      save
-    </div>
-    <div id = "page">
-      <h1>Invoice</h1>
-      <table>
-        <tr>
-          <td>
-            <h2 id = "my-name">Maeve Ralph</h2>
-          </td>
-          <td>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h4 id = "my-address">34 The Parade</h4>
-          </td>
-          <td>
-            <h4 id = "my-number">0400 000 000</h4>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h4 id = "my-city">Dulwich Hill, 2302</h4>
-          </td>
-          <td>
-            <h4 id = "my-email">maeve@gmail.com</h4>
-          </td>
-        </tr>
-      </table>
+    <div v-if = "show" id = "invoice">
 
-      <table>
-        <tr>
-          <td class = "btm-line">
-            <h2>Invoice Recipient</h2>
-          </td>
-          <td class = "btm-line">
-            <h4 id = "date" style = "float: right">Date 21 Jun 2020</h4>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h3 id = "biller-name">The Commercial</h3>
-          </td>
-          <td>
-            <h4 id = "biller-number">0400 000 000</h4>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h4 id = "biller-address">4 Jabz st</h4>
-          </td>
-          <td>
-            <h4 id = "biller-email">tcg@gmaill</h4>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h4 id = "biller-city">Marrickville 2402</h4>
-          </td>
-          <td>
-          </td>
-        </tr>
-      </table>
+      <icon size = "2" :pos = "{x: '1em', y: '1em'}" @click = "show_form = 'biller-form'">{{biller.photoURL}}</icon>
+      <icon size = "2" :pos = "{x: '1em', y: '5em'}" @click = "save">save</icon>
 
-      <table id = "items">
-        <tr class = "ctr-lines">
-          <td class = "btm-line" style = "width: 50%">
-            <h2>Description</h2>
-          </td>
-          <td class = "btm-line" style = "width: 20%">
-            <h2>Date</h2>
-          </td>
-          <td class = "btm-line" style = "width: 10%">
-            <h2>Rate</h2>
-          </td>
-          <td class = "btm-line" style = "width: 10%">
-            <h2>Qty</h2>
-          </td>
-          <td class = "btm-line" style = "width: 10%">
-            <h2>Total</h2>
-          </td>
-        </tr>
+      <div v-if = "show_form != false" id = "form">
+        <icon :pos = "{x: '1em', y: '1em'}" size = "2" @click = "show_form = false">return</icon>
 
-      </table>
-
-      <table>
-
-        <tr>
-          <td class = "btm-line" style = "width: 50%">
-            <h2>Payment Method</h2>
-          </td>
-          <td class = "btm-line" style = "width: 50%">
-          </td>
-        </tr>
-
-        <tr class = "ctr-lines">
-          <td>
-            <h3>BSB</h3>
-          </td>
-          <td>
-            <h4 id = "my-BSB">21/4/2222</h4>
-          </td>
-        </tr>
-
-        <tr class = "ctr-lines">
-          <td>
-            <h3>Account Number</h3>
-          </td>
-          <td>
-            <h4 id = "my-accnum">21/4/2222</h4>
-          </td>
-        </tr>
-
-        <tr class = "ctr-lines">
-          <td>
-            <h3>ABN</h3>
-          </td>
-          <td>
-            <h4 id = "my-ABN">21/4/2222</h4>
-          </td>
-        </tr>
-
-      </table>
-
-    </div>
-    <div class = "form-window" id = "forms">
-      <div id = "myInfoForm" class = "form">
-        <h1>Add Your Info</h1>
-        <h4>This will be used to add your details to the invoice</h4>
-        <br />
-        <h3>Name</h3><input type="text" id = 'i-my-name'/>
-        <br />
-        <br />
-        <h3>Number</h3><input type="text" id = 'i-my-number'/>
-        <br />
-        <br />
-        <h3>Email</h3><input type="text" id = "i-my-email"/>
-        <br />
-        <br />
-        <br />
-        <br />
-        <h3>Address</h3><input type="text" id = "i-my-address"/>
-        <br />
-        <br />
-        <h3>City</h3><input type="text" id = "i-my-city"/>
-        <br />
-        <br />
-        <br />
-        <br />
-        <h3>BSB</h3><input type="text" id = "i-my-BSB"/>
-        <br />
-        <br />
-        <h3>Account Number</h3><input type="text" id = "i-my-accnum"/>
-        <br />
-        <br />
-        <h3>ABN</h3><input type="text" id = "i-my-ABN"/>
-        <br />
-        <h6>Submit</h6>
-      </div>
-      <div id = "billerInfoForm" class = "form">
-        <h1>Add Their Info</h1>
-        <h4>This will be used to add the details of the person the invoice is to</h4>
-        <br />
-        <h3>Name</h3><input type="text" id = "i-biller-name"/>
-        <br />
-        <br />
-        <h3>Number</h3><input type="text" id = "i-biller-number"/>
-        <br />
-        <br />
-        <h3>Email</h3><input type="text" id = "i-biller-email"/>
-        <br />
-        <br />
-        <br />
-        <br />
-        <h3>Address</h3><input type="text" id = "i-biller-address"/>
-        <br />
-        <br />
-        <h3>City</h3><input type="text" id = "i-biller-city"/>
-        <br />
-        <h6>Submit</h6>
+        <biller-form v-if = "show_form == 'biller-form'" v-model = "biller" @input = "show_form = false"></biller-form>
+        <add-recipient v-if = "show_form == 'add-recipient'" v-model = "recipient" @input = "show_form = false"></add-recipient>
+        <add-item-form v-if = "show_form == 'add-item-form'" @input = "add_item"></add-item-form>
       </div>
 
-      <div id = "addItemForm" class = "form">
-        <h1>Add an Item</h1>
-        <h4>This will add an invoice item</h4>
-        <br />
-        <h3>Description</h3><input type="text" id = "i-item-description"/>
-        <br />
-        <br />
-        <h3>Date</h3><input type="text" id = "i-item-date"/>
-        <br />
-        <br />
-        <h3>Rate</h3><input type="text" id = "i-item-rate"/>
-        <br />
-        <br />
-        <h3>Qty</h3><input type="text" id = "i-item-qty"/>
-        <br />
-        <h6>Submit</h6>
+      <div id = "page">
+        <h1>Invoice</h1>
+        <h4>{{date}}</h4>
+        <table class = "biller">
+          <tr>
+            <td>
+              <h2>{{biller.displayName}}</h2>
+            </td>
+            <td>
+              <h4>{{biller.email}}</h4>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h4>{{biller.address}}</h4>
+            </td>
+            <td>
+              <h4>{{biller.phoneNumber}}</h4>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h4>{{biller.city}}</h4>
+            </td>
+            <td>
+            </td>
+          </tr>
+        </table>
+
+        <table class = "recipient">
+          <tr>
+            <th colspan="2">
+              <h2>Invoice Recipient</h2>
+              <icon @click = "show_form = 'add-recipient'">edit</icon>
+            </th>
+          </tr>
+          <tr>
+            <td>
+              <h3>{{recipient.displayName}}</h3>
+            </td>
+            <td>
+              <h4>{{recipient.phoneNumber}}</h4>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h4>{{recipient.address}}</h4>
+            </td>
+            <td>
+              <h4>{{recipient.email}}</h4>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h4>{{recipient.city}}</h4>
+            </td>
+            <td>
+            </td>
+          </tr>
+        </table>
+
+        <table class = "items">
+          <thead>
+            <tr>
+              <th style = "width: 50%">
+                <h2 ref = "description_h2">Description</h2>
+              </th>
+              <th style = "width: 20%">
+                <h2>Date</h2>
+              </th>
+              <th style = "width: 10%">
+                <h2>Rate</h2>
+              </th>
+              <th style = "width: 10%">
+                <h2>Qty</h2>
+              </th>
+              <th style = "width: 10%">
+                <h2>Total</h2>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for = "(item, i) in items">
+              <td @dblclick = "remove_item(i)">
+                <h4>{{item.description}}</h4>
+                <icon @click = "remove_item(i)">delete</icon>
+              </td>
+              <td>
+                <h4>{{item.date}}</h4>
+              </td>
+              <td>
+                <h4>${{item.rate}}</h4>
+              </td>
+              <td>
+                <h4>{{item.qty}}</h4>
+              </td>
+              <td>
+                <h4>${{item.qty * item.rate}}</h4>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan = "4">
+                <icon float = "left" @click = "show_form = 'add-item-form'">add</icon>
+              </td>
+              <td></td></tr>
+            <tr>
+              <td colspan="4">
+
+                <h3>Grand Total</h3>
+              </td>
+              <td>
+                <h3>${{total}}</h3>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <table class = "payment-method">
+          <tr>
+            <td class = "btm-line" style = "width: 50%">
+              <h2>Payment Method</h2>
+            </td>
+            <td class = "btm-line" style = "width: 50%">
+            </td>
+          </tr>
+
+          <tr class = "ctr-lines">
+            <td>
+              <h3>BSB</h3>
+            </td>
+            <td>
+              <h4>{{biller.bsb}}</h4>
+            </td>
+          </tr>
+
+          <tr class = "ctr-lines">
+            <td>
+              <h3>Account Number</h3>
+            </td>
+            <td>
+              <h4>{{biller.accountNo}}</h4>
+            </td>
+          </tr>
+
+          <tr class = "ctr-lines">
+            <td>
+              <h3>ABN</h3>
+            </td>
+            <td>
+              <h4>{{biller.abn}}</h4>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
   </body>
   <script type = "text/javascript">
-    class MyInvoice{
-      constructor(){
-        this.myInfo = {
-          name: document.getElementById('my-name'),
-          address: document.getElementById('my-address'),
-          city: document.getElementById('my-city'),
-          number: document.getElementById('my-number'),
-          email: document.getElementById('my-email'),
-          BSB: document.getElementById('my-BSB'),
-          accnum: document.getElementById('my-accnum'),
-          ABN: document.getElementById('my-ABN')
-        }
-        this.myInfoInput = {
-          name: document.getElementById('i-my-name'),
-          address: document.getElementById('i-my-address'),
-          city: document.getElementById('i-my-city'),
-          number: document.getElementById('i-my-number'),
-          email: document.getElementById('i-my-email'),
-          BSB: document.getElementById('i-my-BSB'),
-          accnum: document.getElementById('i-my-accnum'),
-          ABN: document.getElementById('i-my-ABN')
-        }
-        this.billerInfo = {
-          name: document.getElementById('biller-name'),
-          address: document.getElementById('biller-address'),
-          city: document.getElementById('biller-city'),
-          number: document.getElementById('biller-number'),
-          email: document.getElementById('biller-email')
-        }
-        this.billerInfoInput = {
-          name: document.getElementById('i-biller-name'),
-          address: document.getElementById('i-biller-address'),
-          city: document.getElementById('i-biller-city'),
-          number: document.getElementById('i-biller-number'),
-          email: document.getElementById('i-biller-email')
-        }
-        this.addItemInput = {
-          description: document.getElementById('i-item-description'),
-          date: document.getElementById('i-item-date'),
-          rate: document.getElementById('i-item-rate'),
-          qty: document.getElementById('i-item-qty')
-        }
-        this.date = document.getElementById('date')
-        this.itemsTable = document.getElementById('items')
-        this.myInfoForm = document.getElementById('myInfoForm')
-        this.billerInfoForm = document.getElementById('billerInfoForm')
-        this.addItemForm = document.getElementById('addItemForm')
-        this.forms = document.getElementById('forms')
-        this.functionBuffer = []
-        this.setmode = false
-        this.hideForms()
-        this.setDate()
-      }
+    let page = new Vue({
+      el: '#invoice',
+      data: {
 
-      hideForms(){
-        this.forms.style.setProperty('display', 'none')
-        this.myInfoForm.style.setProperty('display', 'none')
-        this.addItemForm.style.setProperty('display', 'none')
-        this.billerInfoForm.style.setProperty('display', 'none')
-      }
+        biller: {
+          displayName: 'Name',
+          address: 'Address',
+          city: 'City',
+          email: 'Email',
+          phoneNumber: 'Number',
+          abn: 'ABN',
+          bsb: 'BSB',
+          accountNo: 'Acount Number',
+          uid: '',
+          photoURL: '',
+        },
 
-      showForm(form){
-        this.forms.style.setProperty('display', 'block')
-        form.style.setProperty('display', 'block')
-      }
+        recipient: {
+          displayName: 'Recipient Name',
+          address: 'Recipient Address',
+          city: 'Recipient City',
+          email: 'Recipient Email',
+          phoneNumber: 'Recipient Number',
+        },
 
-      setDate(){
-        var dateNow = `${new Date()}`
-        dateNow = `${dateNow.split(' ')[1]} ${dateNow.split(' ')[2]} ${dateNow.split(' ')[3]}`
-        this.date.innerHTML = dateNow
-      }
-      setMyInfo(){
-        if (this.setmode){
-          this.functionBuffer.push('setMyInfo')
-          return
-        }else{
-          this.setmode = true
-          this.showForm(this.myInfoForm)
-          let submit = this.myInfoForm.getElementsByTagName('H6')[0]
-          submit.onclick = () => {
-            for (var key in this.myInfoInput){
-              if(this.myInfoInput[key].value.length < 1){
-                alert(`${key} has been left blank`)
-                return
-              }
-              this.myInfo[key].innerHTML = this.myInfoInput[key].value
-            }
-            this.myInfoForm.style.setProperty('display', 'none')
-            this.hideForms()
-            this.setmode = false
-            if (this.functionBuffer.length > 0){
-              let f = this.functionBuffer.shift()
-              this[f]()
-            }
+        items: [],
+        show: false,
+        _date: null,
+        show_form: false,
+      },
+
+      methods: {
+        save: function(){
+          let content = document.getElementById('page');
+          let print_page = document.createElement('div');
+          print_page.setAttribute('style', 'position: fixed; top: 0; left: 0; height: 297mm; width: 210mm; z-index: 100; background: white:margin: 0');
+          document.body.setAttribute('style', 'position: fixed; top: 0; left: 0; height: 297mm; width: 210mm; z-index: 100; background: white:margin: 0');
+          print_page.innerHTML = content.outerHTML;
+          let icons = print_page.getElementsByClassName('icon');
+
+          while (icons.length != 0){
+            icons[0].remove()
+          }
+          document.body.appendChild(print_page)
+          window.print();
+          document.body.setAttribute('style', '');
+
+          print_page.remove();
+
+        },
+        remove_item: function(i){
+          this.items.splice(i, 1);
+        },
+        add_item: function(item){
+          this.items.push(item);
+          this.show_form = false;
+        }
+      },
+      computed: {
+        total: function() {
+          var sum = 0;
+          for (var i = 0; i < this.items.length; i++){
+            sum += this.items[i].qty * this.items[i].rate;
+          }
+          return sum
+        },
+        date: function() {
+          let months = ['Jan', 'Fed', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+          if (this._date != null){
+            return this._date
+          }else{
+            let d = new Date();
+            return `${d.getDate()} ${months[d.getMonth()]} ${1900+ d.getYear()}`
           }
         }
-      }
-      setBillerInfo(){
-        if (this.setmode){
-          this.functionBuffer.push('setBillerInfo')
-          return
-        }else{
-          this.setmode = true
-          this.showForm(this.billerInfoForm)
-          let submit = this.billerInfoForm.getElementsByTagName('H6')[0]
-          submit.onclick = () => {
-            for (var key in this.billerInfoInput){
-              if(this.billerInfoInput[key].value.length < 1){
-                alert(`${key} has been left blank`)
-                return
-              }
-              this.billerInfo[key].innerHTML = this.billerInfoInput[key].value
-            }
-            this.billerInfoForm.style.setProperty('display', 'none')
-            this.hideForms()
-            this.setmode = false
+      },
+      created(){
+        let fireAuth = new FireAuth('loading');
 
-            if (this.functionBuffer.length > 0){
-              let f = this.functionBuffer.shift()
-              this[f]()
-            }
+        fireAuth.onsignin = (user) => {
+          if (typeof user == 'object'){
+
+            firebase.database().ref(`invoices/users/${user.uid}`).on('value', (e) => {
+
+              let user = e.val();
+              if (user){
+                this.show = true;
+                this.biller = user;
+              }else{
+                this.show_form = 'biller-form'
+              }
+            })
           }
         }
-      }
-      removeLastItem(){
-        let items = this.itemsTable.children
-        this.itemsTable.removeChild(items[items.length - 1])
-      }
-      addItem(){
-        if (this.setmode){
-          this.functionBuffer.push('addItem')
-          return
-        }else{
-          this.setmode = true
-          this.showForm(this.addItemForm)
-          let submit = this.addItemForm.getElementsByTagName('H6')[0]
-          submit.onclick = () => {
-            console.log('ss');
-            for (var key in this.addItemInput){
-              if (this.addItemInput[key].value.length < 1){
-                alert(`${key} has been left blank`)
-                return
-              }
-            }
-            let row = document.createElement('TR')
-            row.setAttribute('class','ctr-lines')
-            row.innerHTML = `<td>
-            <h4>${this.addItemInput.description.value}</h4>
-            </td>
-            <td>
-            <h4>${this.addItemInput.date.value}</h4>
-            </td>
-            <td>
-            <h4>$${this.addItemInput.rate.value}</h4>
-            </td>
-            <td>
-            <h4>${this.addItemInput.qty.value}</h4>
-            </td>
-            <td>
-            <h4>$${parseFloat(this.addItemInput.rate.value)*parseFloat(this.addItemInput.qty.value)}</h4>
-            </td>`
-            this.itemsTable.appendChild(row)
+      },
+    })
 
-            this.hideForms()
-            this.setmode = false
-
-            if (this.functionBuffer.length > 0){
-              let f = this.functionBuffer.shift()
-              this[f]()
-            }
-          }
-        }
-      }
-    }
-
-    let newInvoice = new MyInvoice()
-    newInvoice.setMyInfo()
-    newInvoice.setBillerInfo()
-
-    let add = document.getElementById('add')
-    add.onclick = () => {newInvoice.addItem()}
-
-    let remove = document.getElementById('remove')
-    remove.onclick = () => {newInvoice.removeLastItem()}
-
-    let print = document.getElementById('print')
-    print.onclick = () => {window.print()}
   </script>
   <style type = "text/css">
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
-    body{
-      margin: 20mm 0;
-      background: rgb(30,30,30);
-      font-family: 'Roboto'
-
+  body{
+    font-family: 'Roboto';
+    background: #111115;
+    font-size: 15px;
+    margin: 1em;
+    max-height: 297mm;
+  }
+    .btn-line{
+      border-bottom: 3px solid black;
     }
-    /* td{
-      width: 50%;
-    } */
-    table{
-      border-collapse: collapse;
-      width: 100%;
-      margin-bottom: 30px;
-    }
-    h4{
-      font-weight: 400;
-      margin: 0;
-    }
-    h3{
-      font-weight: 500;
-      margin: 0;
-      font-size: 16px;
-
-    }
-    h2{
-      margin: 0;
-      font-size: 18px;
-    }
-    h1{
-      font-size: 50px;
-      margin: 5mm 0;
-    }
-    input{
-      background: rgba(255,255,255,0);
-      outline: none;
-      border: 2px solid black;
-      border-radius: 50px;
-      padding: 5px;
-      margin-left: -7px;
-    }
-    h6{
-      font-size: 18px;
-      border: 2px solid black;
-      padding: 5px 10px;
-      border-radius: 50px;
-      float: left;
-      user-select: none;
-      cursor: pointer;
-      /* position: absolute;
-      right: 100px;
-      top: 100px; */
-    }
-    td{
-      padding: 1mm 0;
-    }
-    .btm-line{
-      border-bottom: 1.5px solid black;
-    }
-    .ctr-lines > td{
-      padding-left: 10px;
-      border-right: 1.5px solid black;
-    }
-    .ctr-lines > td:last-child{
-      border-right: none;
-    }
-    .ctr-lines > td:first-child{
-      padding-left: 0;
+    .top-line{
+      border-bottom: 2px solid black;
     }
 
     #page{
-      padding: 15mm;
-      width: 180mm;
-      height: 267mm;
+      --padding: 20mm;
+      width: calc(210mm - 2*var(--padding));
+      height: calc(297mm - 2*var(--padding));
       background: white;
       margin: auto;
+      padding: var(--padding);
+      position: relative;
     }
-    #myInfo{
-      display: none;
+    #page > h4{
+      display: inline;
+      float: right;
+      line-height: 3em;
     }
-    #billerInfo{
-      display: none;
+
+    #page h1{
+      margin: 0;
+      font-size: 3em;
+      font-weight: 500;
+      display: inline;
     }
-    #addItem{
-      display: none;
+    #page h2{
+      margin: 0.2em 0;
+      text-align: left;
+      font-weight: 500;
+      display: inline;
+      float: left;
     }
-    .form-window{
-      display: none;
+    #page h3{
+      font-weight: 500;
+    }
+    #page h4, h3{
+      margin: 0.25em 0;
+      font-weight: 400;
+      display: inline;
+    }
+    .recipient th, .items th, .items tfoot tr:first-child td, .payment-method tr:first-child td{
+      border-bottom: 2px solid black;
+      vertical-align: middle;
+    }
+    .biller, .recipient, .items{
+      width: 100%;
+      margin-bottom: 2em;
+      border-collapse: collapse;
+    }
+    .items{
+      margin-top: 7em;
+    }
+    .items td:nth-of-type(n + 2), .items th:nth-of-type(n + 2), .payment-method td:nth-of-type(n + 2){
+      border-left: 2px solid black;
+      padding-left: 1em;
+    }
+    .items td, .items th{
+      padding-right: 1em;
+    }
+    .items h2{
+      font-size: 1em;
+    }
+    .items tfoot tr:first-child td{
+      border-bottom: 0.16em solid black;
+      padding-bottom: 2em;
+    }
+
+    .items tfoot:first-of-type{
+      text-align: right;
+    }
+    .payment-method{
+      border-collapse: collapse;
+      width: calc(100% - 2*var(--padding));
+      font-size: 0.8em;
+      position: absolute;
+      bottom: var(--padding);
+    }
+    .payment-method tr:first-of-type td{
+      border-left: none;
+    }
+    .payment-method h4{
+      font-size: 1.3em;
+    }
+    td .icon:nth-of-type(n + 1){
+      margin-left: 0.3em;
+    }
+    .icon{
+      float: right;
+      fill: #666;
+      border: 2px solid #666;
+      border-radius: 50%;
+      padding: 0.1em;
+      z-index: 5;
+    }
+    .icon:hover{
+      /* border-color: #001; */
+      box-shadow: 0 0 3px 3px #6666;
+    }
+
+
+    #buttons{
+      position: absolute;
+      top: 1em;
+      left: 1em;
+      width: var(--btn-size);
+      height: 50em;
+      z-index: 3;
+    }
+    #buttons > div, #buttons > img{
+      box-shadow: 0px 0px 3px 3px #7777;
+      border-radius: var(--btn-size);
+      width: calc(var(--btn-size) - 2px * 2);
+      height: calc(var(--btn-size) - 2px * 2);
+      border: 2px solid #999;
+      line-height: calc(var(--btn-size) - 2px * 2);
+      text-align: center;
+      user-select: none;
+      cursor: pointer;
+      color: #999;
+    }
+
+    #form{
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      background: rgba(255,255,255,0.3);
-      overflow-y: scroll;
-      overflow-x: hidden;
+      background: #fff3;
+      z-index: 10;
+      -webkit-backdrop-filter: blur(25px);
+      padding-top: 5em;
+      backdrop-filter: blur(25px);
+    }
+    #form input{
+      border: 2px solid black;
+      background: #fff8;
+      outline: none;
+      font-family: 'Roboto';
+      font-weight: 400;
+      padding: 0.5em;
+      border-radius: 3em;
+      touch-action: none;
+    }
+    #form tr td:last-of-type{
+      padding-left: 2em;
+    }
+    #form input:focus{
+      box-shadow: 0px 0px 3px 3px #5553;
+      background: #fffd;
+    }
+    #form h1{
+      margin: 0 0 2em 0;
+      text-align: left;
+      font-weight: 500;
+    }
+    #form h2{
+      margin: 0.5em 0;
+      font-weight: 400;
 
     }
-    .form{
-      /* background:rgb(240,240,255); */
-      width: 210mm;
-      height: 70%;
-      margin: 70px auto;
-      padding: 0 20px;
-
+    #form table{
+      margin: auto;
     }
-    .btn{
-      position: fixed;
-      border-radius: 50px;
-      border: 2px solid grey;
-      width: 30px;
-      height: 30px;
-      color: grey;
-      line-height: 30px;
-      text-align: center;
+    .bubble{
+      border: 2px solid black;
+      padding: 0.35em;
+      border-radius: 3em;
       user-select: none;
       cursor: pointer;
+      font-weight: 500;
     }
-    #add{
-      top: 20px;
-      right: 20px;
+    .sumbit{
+      float: right;
+      border: 2px solid black;
+      padding: 0.35em;
+      border-radius: 3em;
+      user-select: none;
+      cursor: pointer;
+      font-weight: 500;
+      margin-top: 2em;
     }
-    #remove{
-      top: 70px;
-      right: 20px;
+    .sumbit:hover, #choose-recipient h2:hover{
+      box-shadow: 0px 0px 3px 3px #2223;
     }
-    #print{
-      top: 20px;
-      right: 70px;
-      width: 60px;
+    .submit:active {
+      background: #5555;
     }
-    @media print{
-      body{
-        background: white;
-      }
-      body * {
-        visibility: hidden;
-        background: white;
-      }
-      #page, #page * {
-        visibility: visible;
-      }
-      #page {
-        position: absolute;
-        left: 0;
-        top: 0;
-      }
-    }
+
   </style>
 
 </html>
