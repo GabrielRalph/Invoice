@@ -155,69 +155,43 @@ Vue.component('biller-form', {
   },
   template: `
     <table>
-      <tr>
-        <th colspan="2">
-          <h1>Update User</h1>
-        </th>
-      </tr>
+
       <tr>
         <td>
-          <h2>Name</h2>
-        </td>
-        <td>
-          <input v-model = "value.displayName"/>
+          <v-input label = "Name" v-model = "value.displayName"/>
         </td>
       </tr>
       <tr>
         <td>
-          <h2>Number</h2>
-        </td>
-        <td>
-          <input v-model = "value.phoneNumber"/>
+          <v-input label = "Number" v-model = "value.phoneNumber"/>
         </td>
       </tr>
       <tr>
         <td>
-          <h2>Address</h2>
-        </td>
-        <td>
-          <input v-model = "value.address"/>
+          <v-input label = "Address" v-model = "value.address"/>
         </td>
       </tr>
       <tr>
         <td>
-          <h2>City</h2>
-        </td>
-        <td>
-          <input v-model = "value.City"/>
+          <v-input label = "City" v-model = "value.City"/>
         </td>
       </tr>
       <tr>
         <td>
-          <h2>ABN</h2>
-        </td>
-        <td>
-          <input v-model = "value.abn"/>
+          <v-input label = "ABN" v-model = "value.abn"/>
         </td>
       </tr>
       <tr>
         <td>
-          <h2>BSB</h2>
-        </td>
-        <td>
-          <input v-model = "value.bsb"/>
+          <v-input label = "BSB" v-model = "value.bsb"/>
         </td>
       </tr>
       <tr>
         <td>
-          <h2>Account Number</h2>
-        </td>
-        <td>
-          <input v-model = "value.accountNo"/>
+          <v-input label = "Account Number" v-model = "value.accountNo"/>
         </td>
       </tr>
       <tr>
-        <td></td>
         <td>
           <icon float = "right" @click = "update">confirm</icon>
         </td>
@@ -261,55 +235,38 @@ Vue.component('add-client-form', {
   template: `
   <table>
     <tr>
-      <th colspan="2">
+      <th>
         <h1>Add a Recipient</h1>
       </th>
     </tr>
     <tr>
       <td>
-        <h2>Name</h2>
-      </td>
-      <td>
-        <input v-model = "value.displayName"/>
+        <v-input label = "Name" v-model = "value.displayName"/>
       </td>
     </tr>
     <tr>
       <td>
-        <h2>Number</h2>
-      </td>
-      <td>
-        <input v-model = "value.phoneNumber"/>
+        <v-input label = "Number" v-model = "value.phoneNumber"/>
       </td>
     </tr>
     <tr>
       <td>
-        <h2>Email</h2>
-      </td>
-      <td>
-        <input v-model = "value.email"/>
+        <v-input label = "Email" v-model = "value.email"/>
       </td>
     </tr>
     <tr>
       <td>
-        <h2>Address</h2>
-      </td>
-      <td>
-        <input v-model = "value.address"/>
+        <v-input label = "Address" v-model = "value.address"/>
       </td>
     </tr>
     <tr>
       <td>
-        <h2>City</h2>
-      </td>
-      <td>
-        <input v-model = "value.City"/>
+        <v-input label = "City" v-model = "value.city"/>
       </td>
     </tr>
     <tr>
       <td>
         <icon float = "left" @click = "$emit('return')">return</icon>
-      </td>
-      <td>
         <icon float = "right" @click = "add_client">add</icon>
       </td>
     </tr>
@@ -391,6 +348,32 @@ Vue.component('add-recipient', {
     })
   }
 })
+
+Vue.component('v-input', {
+  props: ['value', 'label'],
+  data: function() { return{
+    focus: false,
+  }},
+  methods: {
+    on_input: function(e){
+      let value = e.target.value
+      this.value = value;
+      this.$emit('input', value)
+    }
+  },
+  computed: {
+    styler: function(e){
+      let style = "position: absolute; margin: 0; pointer-events: none;"
+      if (typeof this.value === 'undefined' || this.value.length == 0 && !this.focus){
+        style += `top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1em;`
+      }else{
+        style += `top: 1.5px; right: 2em; transform: translate(0, -100%); font-size: 0.7em; padding: 0.1em 0.5em; border: 2px solid white; border-radius:1em 1em 0 0;border-bottom: none;`
+      }
+      return style
+    }
+  },
+  template: `<div class = "input-box" style = "position: relative"><input @focusin = "focus = true" @focusout = "focus = false" :value = 'value' @input = "on_input" /><h4 :style = "styler">{{label}}</h4></div>`
+})
 Vue.component('add-item-form', {
   props: {
     value: {
@@ -399,8 +382,8 @@ Vue.component('add-item-form', {
         return {
           description: '',
           date: '',
-          rate: 0,
-          qty: 0
+          rate: '',
+          qty: ''
         }
       }
     }
@@ -436,41 +419,30 @@ Vue.component('add-item-form', {
       </th>
     </tr>
     <tr>
-      <td>
-        <h2>Description</h2>
-      </td>
-      <td>
-        <input v-model = "value.description"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <h2>Date</h2>
-      </td>
-      <td>
-        <input v-model = "value.date"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <h2>Rate</h2>
-      </td>
-      <td>
-        <input v-model = "value.rate"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <h2>Quantity</h2>
-      </td>
-      <td>
-        <input v-model = "value.qty"/>
-      </td>
-    </tr>
-    <tr>
-      <td>
 
+      <td>
+        <v-input v-model = "value.description" label = "Description"/>
       </td>
+    </tr>
+    <tr>
+
+      <td>
+        <v-input label = "Date" v-model = "value.date"/>
+      </td>
+    </tr>
+    <tr>
+
+      <td>
+        <v-input label = "Rate" v-model = "value.rate"/>
+      </td>
+    </tr>
+    <tr>
+
+      <td>
+        <v-input label = "Quantity" v-model = "value.qty"/>
+      </td>
+    </tr>
+    <tr>
       <td>
         <icon float = "right" @click = "add_item">add</icon>
       </td>
