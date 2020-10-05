@@ -10,20 +10,29 @@
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src= "https://www.gstatic.com/firebasejs/7.14.4/firebase.js"></script>
   <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
-  <script src="./forms.js"></script>
   <script src= "./config.js"></script>
+  <script src="./forms.js"></script>
 
   <body>
-    <div v-if = "show" id = "invoice">
+    <div v-if = "biller != null" id = "invoice">
 
 
 
       <div v-if = "show_form != false" id = "form">
         <icon :pos = "{x: '1vw', y: '0.3vw'}" @click = "show_form = false">return</icon>
 
-        <biller-form v-if = "show_form == 'biller-form'" v-model = "biller" @input = "show_form = false"></biller-form>
-        <add-recipient v-if = "show_form == 'add-recipient'" v-model = "recipient" @input = "show_form = false"></add-recipient>
-        <add-item-form v-if = "show_form == 'add-item-form'" @input = "add_item"></add-item-form>
+        <add-recipient v-if = "show_form == 'add-recipient'"
+          v-model = "recipient"
+          @input = "show_form = false"
+          :fireAuth = "fireAuth"></add-recipient>
+
+        <biller-form v-if = "show_form == 'biller-form'"
+          v-model = "biller"
+          @input = "show_form = false"
+          :fireAuth = "fireAuth"></biller-form>
+
+        <add-item-form v-if = "show_form == 'add-item-form'"
+          @input = "add_item"></add-item-form>
       </div>
 
       <div id = "page">
@@ -199,22 +208,23 @@
     </div>
   </body>
   <script type = "text/javascript">
+    let fireAuth = new FireAuth()
     let page = new Vue({
       el: '#invoice',
       data: {
-
-        biller: {
-          displayName: 'Name',
-          address: 'Address',
-          city: 'City',
-          email: 'Email',
-          phoneNumber: 'Number',
-          abn: 'ABN',
-          bsb: 'BSB',
-          accountNo: 'Acount Number',
-          uid: '',
-          photoURL: '',
-        },
+        biller:null,
+        // {
+        //   displayName: 'Name',
+        //   address: 'Address',
+        //   city: 'City',
+        //   email: 'Email',
+        //   phoneNumber: 'Number',
+        //   abn: 'ABN',
+        //   bsb: 'BSB',
+        //   accountNo: 'Acount Number',
+        //   uid: '',
+        //   photoURL: '',
+        // },
 
         recipient: {
           displayName: 'Recipient Name',
@@ -285,23 +295,9 @@
         }
       },
       created(){
-        let fireAuth = new FireAuth('loading');
-
-        fireAuth.onsignin = (user) => {
-          if (typeof user == 'object'){
-
-            firebase.database().ref(`invoices/users/${user.uid}`).on('value', (e) => {
-
-              let user = e.val();
-              if (user){
-                this.show = true;
-                this.biller = user;
-              }else{
-                this.show_form = 'biller-form'
-              }
-            })
-          }
-        }
+        fireAuth.addEventListener('user', (user) => {
+          this.biller = user;
+        })
       },
     })
 

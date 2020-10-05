@@ -78,7 +78,7 @@ class WaveLoader{
 }
 
 class FireAuth{
-  constructor(elem){
+  constructor(signin = true){
 
     this.uiConfig = {
       // Url to redirect to after a successful sign-in.
@@ -101,7 +101,12 @@ class FireAuth{
         {
           provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
           // Required to enable ID token credentials for this provider.
-          clientId: CLIENT_ID
+          clientId: CLIENT_ID,
+          customParameters: {
+            // Forces account selection even when one account
+            // is available.
+            prompt: 'select_account'
+          }
         },
       ],
       // Terms of service url.
@@ -110,21 +115,18 @@ class FireAuth{
           firebaseui.auth.CredentialHelper.GOOGLE_YOLO :
           firebaseui.auth.CredentialHelper.NONE
     };
-    this.signin = (elem === 'signin');
-    // let el = parseElement(elem);
-    // if (el != null){
-    //   this.loader = new WaveLoader(el.getElementsByTagName('svg')[0])
-    //   this.loader.start()
-    // }
+
+    this.user = null;
+    this.onuser = [];
+    this.onnewuser = [];
 
     // Initialize the FirebaseUI Widget using Firebase.
     this.ui = new firebaseui.auth.AuthUI(firebase.auth());
 
-    if (!this.signin){
+    if (signin){
       // Disable auto-sign in.
       this.ui.disableAutoSignIn();
 
-      this.onsignin = [];
 
       firebase.auth().onAuthStateChanged((user) => {
         //If no user then navigate to the login widget
@@ -133,25 +135,13 @@ class FireAuth{
 
           // Execute event handlers
         }else{
-
-          if (this.onsignin instanceof Function){
-            this.onsignin(user)
-          }else if(this.onsignin instanceof Array){
-            this.onsignin.forEach((func) => {
-              func(user)
-            })
-          }
-
+          this.getUser(user)
         }
       });
     }else{
       this.ui.start('#firebaseui-auth-container', this.uiConfig)
     }
   }
-
-  // attachLoader(loader){
-  //   this.loader = loader;
-  // }
 
   deleteAccount() {
     firebase.auth().currentUser.delete().catch(function(error) {
@@ -168,12 +158,9 @@ class FireAuth{
     });
   }
 
-
-
   signOut(){
     firebase.auth().signOut();
   }
-
   attachSignOutButton(elem){
     let element = parseElement(elem);
     if (element != null){
@@ -185,23 +172,140 @@ class FireAuth{
     }
   }
 
-  addEventListener(type, callback){
-    let events = this['on' + type]
-    if (events){
-      if (callback instanceof Function){
-        if (events instanceof Function){
-          this['on' + type] = []
-          this['on' + type].push(events)
-          this['on' + type].push(callback)
-        }else if (events instanceof Array){
-          events.push(callback)
-        }
+  client_id(user){
+    return user.email.replace(/\.|\#|\$|\[|\]/g, '_')
+  }
+
+  getUser(user_a){
+    // Find user in the database
+    firebase.database().ref(`invoices/users/${user_a.uid}`).on('value', (e) => {
+      let user_f = e.val();
+
+      // If no user exists
+      if (user_f == null){
+
+        //Check if they have a temp account that matches their email
+        firebase.database().ref(`invoices/temp_users/${this.client_id(user_a)}`).once('value').then((et) => {
+
+          let user_t = et.val();
+          console.log(user_t);
+          //If they do not have a temp account, create a new account
+          if (user_t == null){
+            this.createUser({
+              displayName: user_a.displayName,
+              email: user_a.email,
+              uid: user_a.uid,
+              photoURL: user_a.photoURL
+            }).catch((err) => {
+              alert(err);
+              throw err;
+            })
+
+          //If they have a temp account, create a new account with the data from the temp account
+          }else{
+            user_t = Object.assign(user_t, {
+              displayName: user_a.displayName,
+              email: user_a.email,
+              uid: user_a.uid,
+              photoURL: user_a.photoURL
+            })
+            this.createUser(user_t, user_a.uid).then(() => {
+              this.removeTemp_user(user_t)
+            }).catch((err) => {
+              alert(err);
+              throw err;
+            })
+          }
+        })
+
+      //If they have an account, run the onuser event listener and set this user
       }else{
-        console.error('Callback must be a function');
+        this.user = user_f;
+        this.runEventListener('user', user_f)
       }
-    }else{
-      console.error(`No event handler called ${type}`);
+    })
+  }
+  createUser(user = this.user, uid = user.uid){
+    return firebase.database().ref(`invoices/users/${user.uid}`).set(user);
+  }
+  updateUser(update){
+    if (this.user == null){
+      throw `No user`
+      return
     }
+
+    return firebase.database().ref(`invoices/users/${this.user.uid}`).update(update)
+  }
+
+  addClient(){
+    if (this.user == null){
+      throw `No user`
+      return
+    }
+  }
+  getClient(email){
+    var get_client = firebase.functions().httpsCallable('getClient');
+    get_client({email: email}).then((e) => {
+      console.log(e.data);
+    })
+  }
+
+  setClient(client){
+    if (this.user == null){
+      throw `No user`
+      return
+    }
+
+    firebase.database().ref(`invoices/temp_users/${this.client_id(client)}`).set(client);
+    return firebase.database().ref(`invoices/users/${this.user.uid}/clients/${this.client_id(client)}`).set(client)
+  }
+  removeClient(client){
+    if (this.user == null){
+      throw `No user`
+      return
+    }
+    let id = client;
+    if (typeof client === 'object' && 'email' in client){
+      id = this.client_id(client.email)
+    }
+    this.removeTemp_user(id);
+    return firebase.database().ref(`invoices/users/${this.user.uid}/clients/${id}`).remove()
+  }
+
+  removeTemp_user(temp_users){
+    let id = temp_users;
+    if (typeof temp_users === 'object' && 'email' in temp_users){
+      id = this.client_id(temp_users)
+    }
+    firebase.database().ref(`invoices/temp_users/${id}`).remove();
+  }
+
+  runEventListener(name, param){
+    name = 'on' + name;
+    if (!(name in this)){
+      throw `${name} is not a valid event`
+      return
+    }
+    let event_listener = this[name]
+    if (event_listener instanceof Function){
+      event_listener(param)
+    }else if(event_listener instanceof Array){
+      event_listener.forEach((callback) => {
+        callback(param)
+      })
+    }
+  }
+  addEventListener(type, callback){
+    type = 'on' + type;
+    if (!(type in this)){
+      throw `${type} is not a valid event listener`
+      return
+    }
+    if (!(callback instanceof Function)){
+      throw 'Callback must be a function'
+      return
+    }
+    this[type].push(callback)
   }
 }
 

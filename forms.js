@@ -144,14 +144,18 @@ Vue.component('biller-form', {
         alert('Please provide your name.');
         return
       }
-      let user = firebase.auth().currentUser;
-      firebase.database().ref(`invoices/users/${user.uid}`).set(this.value).then((e) => {
-        this.$emit('input',this.value);
-      }).catch(function(error) {
-        alert(error)
-        throw error;
-      });
+      fireAuth.updateUser(this.value).then((e) => {
+        this.$emit('input', this.value)
+      }).catch((err) => {
+        alert(err);
+        throw err;
+      })
     },
+  },
+  created(){
+    if (!fireAuth){
+      throw `No global fireAuth`
+    }
   },
   template: `
     <table>
@@ -223,8 +227,7 @@ Vue.component('add-client-form', {
       if (this.value.email.length == 0){
         alert('Please provide the clients email.')
       }
-      let user = firebase.auth().currentUser;
-      firebase.database().ref(`invoices/users/${user.uid}/clients/${this.value.displayName}`).set(this.value).then((e) => {
+      fireAuth.setClient(this.value).then((e) => {
         this.$emit('input', this.value)
       }).catch((err) => {
         alert(err)
@@ -271,7 +274,12 @@ Vue.component('add-client-form', {
       </td>
     </tr>
   </table>
-  `
+  `,
+  created(){
+    if (!fireAuth){
+      throw `No global fireAuth`
+    }
+  }
 })
 Vue.component('add-recipient', {
   props: {
@@ -286,6 +294,10 @@ Vue.component('add-recipient', {
           email: ''
         }
       }
+    },
+    fireAuth: {
+      type: FireAuth,
+      required: true,
     }
   },
   data: function() {
@@ -313,19 +325,19 @@ Vue.component('add-recipient', {
         <icon float = "right" @click = "add = true">add</icon>
       </th>
     </tr>
-    <tr v-for = "client in clients">
+    <tr v-for = "(client, id) in clients">
       <td @click = "set_recipient(client)">
         <h2 class = "bubble">{{client.displayName}}</h2>
       </td>
       <td v-if = "big">{{client.email}}</td>
       <td>
         <icon float = "right" @click = "edit(client)">edit</icon>
-        <icon float = "right" @click = "delete_client(client)">delete</icon>
+        <icon float = "right" @click = "delete_client(id)">delete</icon>
 
       </td>
     </tr>
   </table>
-  <add-client-form v-else :value = 'client' @input = "set_recipient" @return = "add = false"></add-client-form>
+  <add-client-form v-else :value = 'client' @input = "set_recipient" @return = "add = false" :fireAuth = "fireAuth"></add-client-form>
   `,
   methods: {
     set_recipient: function(client){
@@ -336,15 +348,17 @@ Vue.component('add-recipient', {
       this.client = client;
     },
     delete_client: function(client){
-      let user = firebase.auth().currentUser;
-      firebase.database().ref(`invoices/users/${user.uid}/clients/${client.displayName}`).remove();
+      fireAuth.removeClient(client);
     }
   },
   created(){
-    let user = firebase.auth().currentUser;
-
-    firebase.database().ref(`invoices/users/${user.uid}/clients`).on('value', (e) => {
-      this.clients = e.val()
+    if (!fireAuth){
+      throw `No global fireAuth`
+      return
+    }
+    this.clients = fireAuth.user.clients;
+    fireAuth.addEventListener('user', (e) => {
+      this.clients = e.clients;
     })
   }
 })
