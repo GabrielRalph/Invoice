@@ -235,6 +235,16 @@ class FireAuth{
     return get_client({email: email})
   }
 
+  send(invoice, html){
+    if (this.user == null){
+      throw `No user`
+      return
+    }
+
+    var get_client = firebase.functions().httpsCallable('sendInvoice');
+    return get_client({invoice: invoice, html: html})
+  }
+
   removeClient(client){
     if (this.user == null){
       throw `No user`

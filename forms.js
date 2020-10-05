@@ -507,6 +507,19 @@ Vue.component('invoice', {
       }, 20)
 
     },
+    send:function(){
+      this.edit = false;
+      this.print = false;
+      let invoice = {
+          biller: this.biller,
+          recipient: this.recipient,
+          items: this.items
+        }
+        setTimeout(() => {
+          fireAuth.send(invoice,this.$refs.email_body.outerHTML)
+
+        }, 100)
+    },
     remove_item: function(i){
       this.items.splice(i, 1);
     },
@@ -559,10 +572,10 @@ Vue.component('invoice', {
     <div id = "page" :style = "'margin: '+ margin +';font-size: 2vw; font-family: Sans-Serif; background: white; font-weight: 500; text-align: left; position: relative'">
       <div v-if = "edit" id = "buttons">
         <icon v-if = "edit" @click = "show_form = 'biller-form'">{{biller.photoURL}}</icon>
-        <icon v-if = "edit" @click = "save">save</icon>
+        <icon v-if = "edit" @click = "send">save</icon>
       </div>
       <svg v-if = "print" viewBox = "0 0 210 297" width = "100%"></svg>
-      <div ref = "email_body" :style = "print ? 'position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 5em' : 'padding: 1em'">
+      <div ref = "email_body" :style = "print ? 'position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 5em' : 'padding: 1em;  font-family: Sans-Serif;'">
         <div style = "float: left">
           <h1 style = "font-size: 3em; margin: 0; line-height: 0.8em">Invoice</h1>
           <h4 style = "margin: 0.5em 0 5em 0">{{date}}</h4>
