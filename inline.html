@@ -1,0 +1,175 @@
+<div style = "font-size: 3vw; font-family: Sans-Serif; font-weight: 500; text-align: left; position: relative">
+  <!-- <table v-if = "edit" id = "buttons">
+    <tr>
+      <td>
+        <icon v-if = "edit" @click = "show_form = 'biller-form'">{{biller.photoURL}}</icon>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <icon v-if = "edit" @click = "save">save</icon>
+      </td>
+    </tr>
+  </table> -->
+  <svg viewBox = "0 0 210 297" width = "100%"></svg>
+  <div style = "position: absolute; top: 0; left: 0; bottom: 0; right: 0; padding: 8vw">
+
+    <div style = "float: left">
+      <h1 style = "font-size: 3em; margin: 0; line-height: 0.8em">Invoice</h1>
+      <h4 style = "margin: 1vw 0 10vw 0">{{date}}</h4>
+    </div>
+    <table style = "float: right; font-size: 0.6em; font-weight: light; border-collapse: collapse">
+      <tr>
+        <td style = "border-right: 2px solid black; padding-right: 1em">
+          {{biller.displayName}}
+        </td>
+        <td style = "padding-left: 1em">
+          {{biller.address}}
+        </td>
+      </tr>
+      <tr>
+        <td style = "border-right: 2px solid black; padding-right: 1em">
+          {{biller.phoneNumber}}
+        </td>
+        <td style = "padding-left: 1em">
+          {{biller.city}}
+        </td>
+      </tr>
+      <tr>
+        <td colspan = "2">
+        {{biller.email}}
+        </td>
+      </tr>
+    </table>
+
+    <table style = "width: 100%; border-collapse: collapse; margin-bottom: 10vw">
+      <tr style = "text-align: left">
+        <th colspan="2" style = "border-bottom: 2px solid black; padding-bottom: 0.5em">
+          Invoice Recipient
+          <!-- <icon v-if = "edit" @click = "show_form = 'add-recipient'">edit</icon> -->
+        </th>
+      </tr>
+      <tr>
+        <td style = "border-right: 2px solid black; padding-right: 1em; padding-top: 0.5em">
+          {{recipient.displayName}}
+        </td>
+        <td style = "padding-left: 1em">
+          {{recipient.email}}
+        </td>
+      </tr>
+      <tr>
+        <td style = "border-right: 2px solid black; padding-right: 1em; padding-top: 0.5em">
+          {{recipient.address}}
+        </td>
+        <td style = "padding-left: 1em">
+          {{recipient.phoneNumber}}
+        </td>
+      </tr>
+      <tr>
+        <td style = "border-right: 2px solid black; padding-right: 1em; padding-top: 0.5em">
+          {{recipient.city}}
+        </td>
+        <td style = "padding-left: 1em">
+        </td>
+      </tr>
+    </table>
+
+    <table style = "width: 100%; border-collapse: collapse; margin-bottom: 10vw">
+      <thead>
+        <tr>
+          <th style = "width: 50%; border-bottom: 2px solid black; padding: 0 0 0.5em 0; text-align: left">
+            Description
+          </th>
+          <th style = "width: 20%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+            Date
+          </th>
+          <th style = "width: 10%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+            Rate
+          </th>
+          <th style = "width: 10%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+            Qty
+          </th>
+          <th style = "width: 10%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+            Total
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for = "(item, i) in items">
+          <td>
+            {{item.description}}
+            <icon v-if = "edit" @click = "remove_item(i)">delete</icon>
+          </td>
+          <td style = "padding-left: 0.5em; border-left: 2px solid black">
+            {{item.date}}
+          </td>
+          <td style = "padding-left: 0.5em; border-left: 2px solid black">
+            ${{item.rate}}
+          </td>
+          <td style = "padding-left: 0.5em; border-left: 2px solid black">
+            {{item.qty}}
+          </td>
+          <td style = "padding-left: 0.5em; border-left: 2px solid black">
+            ${{item.qty * item.rate}}
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan = "4" style = "padding-bottom: 1em; border-bottom: 2px solid black">
+            <icon v-if = "edit" float = "left" @click = "show_form = 'add-item-form'">add</icon>
+          </th>
+          <th style = "padding-bottom: 1em; border-bottom: 2px solid black"></th>
+        </tr>
+        <tr>
+          <td colspan="4" style = "text-align: right; padding-right: 1em; border-right: 2px solid black">
+            <b>
+              Grand Total
+            </b>
+          </td>
+          <td style = "padding-left: 1em">
+            <b>
+            ${{total}}
+            </b>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    <table style = "position: absolute; bottom: 8vw; left: 8vw; width: 100%; border-collapse: collapse;">
+      <tr style = "text-align: left">
+        <th style = "width: 50%; padding-bottom: 0.5em; border-bottom: 2px solid black; font-weight: 800">
+          Payment Method
+        </th>
+        <th style = "width: 50%; padding-bottom: 0.5em; border-bottom: 2px solid black">
+        </th>
+      </tr>
+
+      <tr class = "ctr-lines">
+        <td style = "padding-top: 0.5em; font-weight: 600">
+          BSB
+        </td>
+        <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: 2px solid black">
+          {{biller.bsb}}
+        </td>
+      </tr>
+
+      <tr class = "ctr-lines">
+        <td style = "padding-top: 0.5em; font-weight: 600">
+          Account Number
+        </td>
+        <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: 2px solid black">
+          {{biller.accountNo}}
+        </td>
+      </tr>
+
+      <tr class = "ctr-lines">
+        <td style = "padding-top: 0.5em; font-weight: 600">
+          ABN
+        </td>
+        <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: 2px solid black">
+          {{biller.abn}}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

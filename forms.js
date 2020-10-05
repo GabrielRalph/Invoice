@@ -227,10 +227,12 @@ Vue.component('add-client-form', {
       if (this.value.email.length == 0){
         alert('Please provide the clients email.')
       }
-      fireAuth.setClient(this.value).then((e) => {
-        this.$emit('input', this.value)
+      fireAuth.addClient(this.value).then((e) => {
+        let client_f = e.data;
+        alert(client_f.message);
+        this.$emit('input', client_f);
       }).catch((err) => {
-        alert(err)
+        alert(err);
         throw err;
       })
     },
@@ -341,7 +343,12 @@ Vue.component('add-recipient', {
   `,
   methods: {
     set_recipient: function(client){
-      this.$emit('input', client)
+      fireAuth.getClient(client.email).then((e) => {
+        let client_f = e.data
+        this.$emit('input', client_f)
+      }).catch((err) => {
+        alert(err);
+      })
     },
     edit: function(client){
       this.add = true;
@@ -463,4 +470,256 @@ Vue.component('add-item-form', {
     </tr>
   </table>
   `
+})
+Vue.component('invoice', {
+  data: function () { return {
+    biller:null,
+
+    recipient: {
+      displayName: 'Recipient Name',
+      address: 'Recipient Address',
+      city: 'Recipient City',
+      email: 'Recipient Email',
+      phoneNumber: 'Recipient Number',
+    },
+
+    items: [
+    ],
+    show: false,
+    _date: null,
+    show_form: false,
+    edit: true,
+    print: true,
+    margin: '1.5em',
+  }},
+  methods: {
+    save: function(){
+      this.edit = false;
+      this.margin = "0vw";
+      setTimeout(() => {
+        window.print();
+        // this.edit = true;
+        if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ){
+
+        }else{
+          // this.margin = '3vw';
+        }
+      }, 20)
+
+    },
+    remove_item: function(i){
+      this.items.splice(i, 1);
+    },
+    add_item: function(item){
+      this.items.push(item);
+      this.show_form = false;
+    }
+  },
+  computed: {
+    total: function() {
+      var sum = 0;
+      for (var i = 0; i < this.items.length; i++){
+        sum += this.items[i].qty * this.items[i].rate;
+      }
+      return sum
+    },
+    date: function() {
+      let months = ['Jan', 'Fed', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      if (this._date != null){
+        return this._date
+      }else{
+        let d = new Date();
+        return `${d.getDate()} ${months[d.getMonth()]} ${1900+ d.getYear()}`
+      }
+    }
+  },
+  created(){
+    fireAuth.addEventListener('user', (user) => {
+      this.biller = user;
+    })
+  },
+  template: `
+  <div v-if = "biller != null" id = "invoice">
+    <div v-if = "show_form != false" id = "form">
+      <icon :pos = "{x: '1vw', y: '0.3vw'}" @click = "show_form = false">return</icon>
+
+      <add-recipient v-if = "show_form == 'add-recipient'"
+        v-model = "recipient"
+        @input = "show_form = false"
+        :fireAuth = "fireAuth"></add-recipient>
+
+      <biller-form v-if = "show_form == 'biller-form'"
+        v-model = "biller"
+        @input = "show_form = false"
+        :fireAuth = "fireAuth"></biller-form>
+
+      <add-item-form v-if = "show_form == 'add-item-form'"
+        @input = "add_item"></add-item-form>
+    </div>
+    <div id = "page" :style = "'margin: '+ margin +';font-size: 2vw; font-family: Sans-Serif; background: white; font-weight: 500; text-align: left; position: relative'">
+      <div v-if = "edit" id = "buttons">
+        <icon v-if = "edit" @click = "show_form = 'biller-form'">{{biller.photoURL}}</icon>
+        <icon v-if = "edit" @click = "save">save</icon>
+      </div>
+      <svg v-if = "print" viewBox = "0 0 210 297" width = "100%"></svg>
+      <div ref = "email_body" :style = "print ? 'position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 5em' : 'padding: 1em'">
+        <div style = "float: left">
+          <h1 style = "font-size: 3em; margin: 0; line-height: 0.8em">Invoice</h1>
+          <h4 style = "margin: 0.5em 0 5em 0">{{date}}</h4>
+        </div>
+        <table style = "float: right; font-size: 0.8em; font-weight: light; border-collapse: collapse; margin-top: 0.8em;">
+          <tr>
+            <td style = "border-right: 2px solid black; padding-right: 1em">
+              {{biller.displayName}}
+            </td>
+            <td style = "padding-left: 1em">
+              {{biller.address}}
+            </td>
+          </tr>
+          <tr>
+            <td style = "border-right: 2px solid black; padding-right: 1em">
+              {{biller.phoneNumber}}
+            </td>
+            <td style = "padding-left: 1em">
+              {{biller.city}}
+            </td>
+          </tr>
+          <tr>
+            <td colspan = "2">
+            {{biller.email}}
+            </td>
+          </tr>
+        </table>
+
+        <table style = "width: 100%; border-collapse: collapse; margin-bottom: 5em;">
+          <tr style = "text-align: left">
+            <th colspan="2" style = "border-bottom: 2px solid black; padding-bottom: 0.5em; padding-left:0">
+              Invoice Recipient
+              <icon v-if = "edit" @click = "show_form = 'add-recipient'">edit</icon>
+            </th>
+          </tr>
+          <tr>
+            <td style = "border-right: 2px solid black; padding-right: 1em; padding-top: 0.3em">
+              {{recipient.displayName}}
+            </td>
+            <td style = "padding-left: 1em">
+              {{recipient.email}}
+            </td>
+          </tr>
+          <tr>
+            <td style = "border-right: 2px solid black; padding-right: 1em; padding-top: 0.3em">
+              {{recipient.address}}
+            </td>
+            <td style = "padding-left: 1em">
+              {{recipient.phoneNumber}}
+            </td>
+          </tr>
+          <tr>
+            <td style = "border-right: 2px solid black; padding-right: 1em; padding-top: 0.3em">
+              {{recipient.city}}
+            </td>
+            <td style = "padding-left: 1em">
+            </td>
+          </tr>
+        </table>
+
+        <table style = "width: 100%; border-collapse: collapse; margin-bottom: 5em">
+          <thead>
+            <tr>
+              <th style = "width: 50%; border-bottom: 2px solid black; padding: 0 0 0.5em 0; text-align: left">
+                Description
+              </th>
+              <th style = "width: 20%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+                Date
+              </th>
+              <th style = "width: 10%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+                Rate
+              </th>
+              <th style = "width: 10%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+                Qty
+              </th>
+              <th style = "width: 10%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+                Total
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for = "(item, i) in items">
+              <td>
+                {{item.description}}
+                <icon v-if = "edit" @click = "remove_item(i)">delete</icon>
+              </td>
+              <td style = "padding-left: 0.5em; border-left: 2px solid black">
+                {{item.date}}
+              </td>
+              <td style = "padding-left: 0.5em; border-left: 2px solid black">
+                $\{{item.rate}}
+              </td>
+              <td style = "padding-left: 0.5em; border-left: 2px solid black">
+                {{item.qty}}
+              </td>
+              <td style = "padding-left: 0.5em; border-left: 2px solid black">
+                $\{{item.qty * item.rate}}
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan = "4" style = "padding-bottom: 1em; border-bottom: 2px solid black">
+                <icon v-if = "edit" float = "left" @click = "show_form = 'add-item-form'">add</icon>
+              </th>
+              <th style = "padding-bottom: 1em; border-bottom: 2px solid black"></th>
+            </tr>
+            <tr>
+              <td colspan="4" style = "text-align: right; padding-right: 1em; border-right: 2px solid black">
+                <b>
+                  Grand Total
+                </b>
+              </td>
+              <td style = "padding-left: 1em; font-weight: 800">
+                $\{{total}}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+        <table :style = "print ? 'position: absolute; bottom: 4em; left: 4em; width: calc( 100% - 8em ); border-collapse: collapse;' : 'margin-top: 5em; width: 100%; border-collapse: collapse;'">
+          <tr style = "text-align: left">
+            <th style = "width: 50%; padding-bottom: 0.5em; border-bottom: 2px solid black; font-weight: 800; padding-left: 0">
+              Payment Method
+            </th>
+            <th style = "width: 50%; padding-bottom: 0.5em; border-bottom: 2px solid black">
+            </th>
+          </tr>
+
+          <tr>
+            <td style = "padding-top: 0.5em; font-weight: 600">
+              BSB
+            </td>
+            <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: 2px solid black">
+              {{biller.bsb}}
+            </td>
+          </tr>
+
+          <tr>
+            <td style = "padding-top: 0.5em; font-weight: 600">
+              Account Number
+            </td>
+            <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: 2px solid black">
+              {{biller.accountNo}}
+            </td>
+          </tr>
+
+          <tr>
+            <td style = "padding-top: 0.5em; font-weight: 600">
+              ABN
+            </td>
+            <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: 2px solid black">
+              {{biller.abn}}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+`
 })

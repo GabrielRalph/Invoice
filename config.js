@@ -183,39 +183,8 @@ class FireAuth{
 
       // If no user exists
       if (user_f == null){
-
-        //Check if they have a temp account that matches their email
-        firebase.database().ref(`invoices/temp_users/${this.client_id(user_a)}`).once('value').then((et) => {
-
-          let user_t = et.val();
-          console.log(user_t);
-          //If they do not have a temp account, create a new account
-          if (user_t == null){
-            this.createUser({
-              displayName: user_a.displayName,
-              email: user_a.email,
-              uid: user_a.uid,
-              photoURL: user_a.photoURL
-            }).catch((err) => {
-              alert(err);
-              throw err;
-            })
-
-          //If they have a temp account, create a new account with the data from the temp account
-          }else{
-            user_t = Object.assign(user_t, {
-              displayName: user_a.displayName,
-              email: user_a.email,
-              uid: user_a.uid,
-              photoURL: user_a.photoURL
-            })
-            this.createUser(user_t, user_a.uid).then(() => {
-              this.removeTemp_user(user_t)
-            }).catch((err) => {
-              alert(err);
-              throw err;
-            })
-          }
+        this.createUser().then((e) => {
+          this.runEventListener('user', e.data)
         })
 
       //If they have an account, run the onuser event listener and set this user
@@ -225,8 +194,18 @@ class FireAuth{
       }
     })
   }
-  createUser(user = this.user, uid = user.uid){
-    return firebase.database().ref(`invoices/users/${user.uid}`).set(user);
+  createUser(){
+    if (firebase.auth().currentUser == null){
+      throw `No user`
+      return
+    }
+    let c_user = firebase.auth().currentUser
+    var create_user = firebase.functions().httpsCallable('createUser');
+    return create_user({user: {
+      displayName: c_user.displayName,
+      email: c_user.email,
+      photoURL: c_user.photoURL
+    }})
   }
   updateUser(update){
     if (this.user == null){
@@ -237,28 +216,25 @@ class FireAuth{
     return firebase.database().ref(`invoices/users/${this.user.uid}`).update(update)
   }
 
-  addClient(){
+  addClient(client){
     if (this.user == null){
       throw `No user`
       return
     }
+
+    var add_client = firebase.functions().httpsCallable('addClient');
+    return add_client({client: client})
   }
   getClient(email){
-    var get_client = firebase.functions().httpsCallable('getClient');
-    get_client({email: email}).then((e) => {
-      console.log(e.data);
-    })
-  }
-
-  setClient(client){
     if (this.user == null){
       throw `No user`
       return
     }
 
-    firebase.database().ref(`invoices/temp_users/${this.client_id(client)}`).set(client);
-    return firebase.database().ref(`invoices/users/${this.user.uid}/clients/${this.client_id(client)}`).set(client)
+    var get_client = firebase.functions().httpsCallable('getClient');
+    return get_client({email: email})
   }
+
   removeClient(client){
     if (this.user == null){
       throw `No user`
@@ -268,16 +244,7 @@ class FireAuth{
     if (typeof client === 'object' && 'email' in client){
       id = this.client_id(client.email)
     }
-    this.removeTemp_user(id);
     return firebase.database().ref(`invoices/users/${this.user.uid}/clients/${id}`).remove()
-  }
-
-  removeTemp_user(temp_users){
-    let id = temp_users;
-    if (typeof temp_users === 'object' && 'email' in temp_users){
-      id = this.client_id(temp_users)
-    }
-    firebase.database().ref(`invoices/temp_users/${id}`).remove();
   }
 
   runEventListener(name, param){
