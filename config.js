@@ -235,22 +235,35 @@ class FireAuth{
     return get_client({email: email})
   }
   get_OAuth2(){
-    return gapi.load('client', () => {
-      gapi.client.init({
-        apiKey: 'AIzaSyAo_SQIwSNHY1SaH8C-dKDGW86lX4nUDZI',
-        clientId: '201145539454-8shtqk42sdmjqqalujg61lb0lb4shbdb.apps.googleusercontent.com',
-        discoveryDocs: ['https://gmail.googleapis.com/$discovery/rest?version=v1'],
-        scope: 'https://www.googleapis.com/auth/gmail.send'
+    return new Promise((resolve, reject) => {
+      const SCOPE = 'https://www.googleapis.com/auth/gmail.send';
+      console.log('getting auth ...');
+      gapi.load('client', () => {
+        gapi.client.init({
+          apiKey: 'AIzaSyAo_SQIwSNHY1SaH8C-dKDGW86lX4nUDZI',
+          clientId: '201145539454-8shtqk42sdmjqqalujg61lb0lb4shbdb.apps.googleusercontent.com',
+          discoveryDocs: ['https://gmail.googleapis.com/$discovery/rest?version=v1'],
+          scope: SCOPE
+        }).then((e) => {
+          console.log('client loaded.\nsignin ...');
+          const googleAuth = gapi.auth2.getAuthInstance()
+           googleAuth.signIn().then(() => {
+            let user = googleAuth.currentUser.get();
+            let isAuthorized = user.hasGrantedScopes(SCOPE);
+            if (isAuthorized){
+              console.log('Access Recieved');
+              let accessToken = user.getAuthResponse().access_token;
+              console.log(accessToken);
+              resolve(accessToken);
+            }
+          }).catch((err2) => {
+            reject(err2)
+          })
+        }).catch((err) => {
+          reject(err)
+        })
       })
-    }).then(() => {
-      return googleAuth.signIn().then(() => {
-        let user = googleAuth.currentUser.get();
-        let isAuthorized = user.hasGrantedScopes(SCOPE);
-        if (isAuthorized){
-          return accessToken = user.getAuthResponse().access_token;
-        }
-      });
-    });
+    })
   }
 
 
@@ -259,9 +272,18 @@ class FireAuth{
       throw `No user`
       return
     }
-    return this.get_OAuth2().then((oAuth2) => {
-      var get_client = firebase.functions().httpsCallable('sendInvoice');
-      return get_client({invoice: invoice, html: html, accessToken: oAuth2})
+    return new Promise((then, catch) => {
+      this.get_OAuth2().then((oAuth2) => {
+        var send_email = firebase.functions().httpsCallable('sendInvoice');
+        send_email({invoice: invoice, html: html, accessToken: oAuth2}).then((e) => {
+          then(e)
+        }).catch((err2) => {
+          catch(err)
+        })
+      }).catch((err) => {
+        catch(err)
+      })
+
     })
 
   }
