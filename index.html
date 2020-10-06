@@ -58,7 +58,8 @@
         }
       },
       methods: {
-        show: function (){
+        start: function (){
+          this.show = true;
           next = (time) => {
             this.t = time/500;
             if (this.show){
@@ -79,7 +80,7 @@
         }
       },
       created(){
-        this.show();
+        this.start();
       },
     })
   </script>
