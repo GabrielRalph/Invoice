@@ -18,14 +18,16 @@
     <script type="text/javascript">
     // let fireAuth = new FireAuth();
     function get_OAuth2(){
-      console.log(gapi);
+      const SCOPE = 'https://www.googleapis.com/auth/gmail.send';
+      console.log('getting auth ...');
       return gapi.load('client', () => {
         gapi.client.init({
           apiKey: 'AIzaSyAo_SQIwSNHY1SaH8C-dKDGW86lX4nUDZI',
           clientId: '201145539454-8shtqk42sdmjqqalujg61lb0lb4shbdb.apps.googleusercontent.com',
           discoveryDocs: ['https://gmail.googleapis.com/$discovery/rest?version=v1'],
-          scope: 'https://www.googleapis.com/auth/gmail.send'
+          scope: SCOPE
         }).then((e) => {
+          console.log('client loaded.\nsignin ...');
           const googleAuth = gapi.auth2.getAuthInstance()
           return googleAuth.signIn().then(() => {
             let user = googleAuth.currentUser.get();
