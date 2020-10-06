@@ -33,7 +33,8 @@
             let user = googleAuth.currentUser.get();
             let isAuthorized = user.hasGrantedScopes(SCOPE);
             if (isAuthorized){
-              return accessToken = user.getAuthResponse().access_token;
+              let accessToken = user.getAuthResponse().access_token;
+              return accessToken;
             }
           });
         });
