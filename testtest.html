@@ -18,7 +18,7 @@
     <script type="text/javascript">
     // let fireAuth = new FireAuth();
     function get_OAuth2(){
-      return new Promise((resolve, reject) {
+      return new Promise((resolve, reject) => {
         const SCOPE = 'https://www.googleapis.com/auth/gmail.send';
         console.log('getting auth ...');
         gapi.load('client', () => {
