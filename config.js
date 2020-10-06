@@ -272,16 +272,16 @@ class FireAuth{
       throw `No user`
       return
     }
-    return new Promise((then, catch) => {
+    return new Promise((resolve, reject) => {
       this.get_OAuth2().then((oAuth2) => {
         var send_email = firebase.functions().httpsCallable('sendInvoice');
         send_email({invoice: invoice, html: html, accessToken: oAuth2}).then((e) => {
-          then(e)
+          resolve(e)
         }).catch((err2) => {
-          catch(err)
+          reject(err)
         })
       }).catch((err) => {
-        catch(err)
+        reject(err)
       })
 
     })
