@@ -234,15 +234,36 @@ class FireAuth{
     var get_client = firebase.functions().httpsCallable('getClient');
     return get_client({email: email})
   }
+  get_OAuth2(){
+    return gapi.load('client', () => {
+      gapi.client.init({
+        apiKey: 'AIzaSyAo_SQIwSNHY1SaH8C-dKDGW86lX4nUDZI',
+        clientId: '201145539454-8shtqk42sdmjqqalujg61lb0lb4shbdb.apps.googleusercontent.com',
+        discoveryDocs: ['https://gmail.googleapis.com/$discovery/rest?version=v1'],
+        scope: 'https://www.googleapis.com/auth/gmail.send'
+      })
+    }).then(() => {
+      return googleAuth.signIn().then(() => {
+        let user = googleAuth.currentUser.get();
+        let isAuthorized = user.hasGrantedScopes(SCOPE);
+        if (isAuthorized){
+          return accessToken = user.getAuthResponse().access_token;
+        }
+      });
+    });
+  }
+
 
   send(invoice, html){
     if (this.user == null){
       throw `No user`
       return
     }
+    return this.get_OAuth2().then((oAuth2) => {
+      var get_client = firebase.functions().httpsCallable('sendInvoice');
+      return get_client({invoice: invoice, html: html, accessToken: oAuth2})
+    })
 
-    var get_client = firebase.functions().httpsCallable('sendInvoice');
-    return get_client({invoice: invoice, html: html})
   }
 
   removeClient(client){
