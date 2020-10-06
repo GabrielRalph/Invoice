@@ -278,7 +278,7 @@ class FireAuth{
         send_email({invoice: invoice, html: html, accessToken: oAuth2}).then((e) => {
           resolve(e)
         }).catch((err2) => {
-          reject(err)
+          reject(err2)
         })
       }).catch((err) => {
         reject(err)
