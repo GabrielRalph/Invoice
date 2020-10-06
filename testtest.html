@@ -13,15 +13,105 @@
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript">
+    // ucs-2 string to base64 encoded ascii
+    function utoa(str) {
+      return window.btoa(unescape(encodeURIComponent(str)));
+    }
+    // base64 encoded ascii to ucs-2 string
+    function atou(str) {
+      return decodeURIComponent(escape(window.atob(str)));
+    }
     let login = async function() {
       const googleAuth = gapi.auth2.getAuthInstance()
       const googleUser = await googleAuth.signIn();
 
-      const token = googleUser.getAuthResponse().id_token;
+      // const token = googleUser.getAuthResponse().id_token;
+      //
+      // const credential = firebase.auth.GoogleAuthProvider.credential(token);
+      //
+      // await firebase.auth().signInAndRetrieveDataWithCredential(credential);
 
-      const credential = firebase.auth.GoogleAuthProvider.credential(token);
+      const message =
+      "From: gltralph@gmail.com\r\n" +
+      "To: gltralph@gmail.com\r\n" +
+      "Subject: As basic as it gets\r\n\r\n" +
+      `<div style="padding:1em"><div style="float:left"><h1 style="font-size:3em;margin:0px;line-height:0.8em">Invoice</h1> <h4 style="margin:0.5em 0px 5em">6 Oct 2020</h4></div> <table style="float:right;font-size:0.8em;border-collapse:collapse;margin-top:0.8em"><tbody><tr><td style="border-right:2px solid black;padding-right:1em">
+              Zoë Christobel Pipe
+            </td> <td style="padding-left:1em">
+              67 Hawthorn pd
+            </td></tr> <tr><td style="border-right:2px solid black;padding-right:1em">
+              040304334
+            </td> <td style="padding-left:1em">
 
-      await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+            </td></tr> <tr><td colspan="2">
+            <a href="mailto:zoecpipe99@gmail.com" target="_blank">zoecpipe99@gmail.com</a>
+            </td></tr></tbody></table> <table style="width:100%;border-collapse:collapse;margin-bottom:5em"><tbody><tr style="text-align:left"><th colspan="2" style="border-bottom:2px solid black;padding-bottom:0.5em;padding-left:0px">
+              Invoice Recipient
+              </th></tr> <tr><td style="border-right:2px solid black;padding-right:1em;padding-top:0.3em">
+              Gabriel Ralph
+            </td> <td style="padding-left:1em">
+              <a href="mailto:gltralph@gmail.com" target="_blank">gltralph@gmail.com</a>
+            </td></tr> <tr><td style="border-right:2px solid black;padding-right:1em;padding-top:0.3em">
+              197 Wilson st
+            </td> <td style="padding-left:1em">
+              0492840426
+            </td></tr> <tr><td style="border-right:2px solid black;padding-right:1em;padding-top:0.3em">
+
+            </td> <td style="padding-left:1em"></td></tr></tbody></table> <table style="width:100%;border-collapse:collapse;margin-bottom:5em"><thead><tr><th style="width:50%;border-bottom:2px solid black;padding:0px 0px 0.5em;text-align:left">
+                Description
+              </th> <th style="width:20%;border-bottom:2px solid black;padding:0px 0px 0.5em 0.5em;text-align:left">
+                Date
+              </th> <th style="width:10%;border-bottom:2px solid black;padding:0px 0px 0.5em 0.5em;text-align:left">
+                Rate
+              </th> <th style="width:10%;border-bottom:2px solid black;padding:0px 0px 0.5em 0.5em;text-align:left">
+                Qty
+              </th> <th style="width:10%;border-bottom:2px solid black;padding:0px 0px 0.5em 0.5em;text-align:left">
+                Total
+              </th></tr></thead> <tbody><tr><td>
+                sucking dick
+                </td> <td style="padding-left:0.5em;border-left:2px solid black">
+                12/2/1998
+              </td> <td style="padding-left:0.5em;border-left:2px solid black">
+                $33
+              </td> <td style="padding-left:0.5em;border-left:2px solid black">
+                11
+              </td> <td style="padding-left:0.5em;border-left:2px solid black">
+                $363
+              </td></tr></tbody> <tfoot><tr><th colspan="4" style="padding-bottom:1em;border-bottom:2px solid black"></th> <th style="padding-bottom:1em;border-bottom:2px solid black"></th></tr> <tr><td colspan="4" style="text-align:right;padding-right:1em;border-right:2px solid black"><b>
+                  Grand Total
+                </b></td> <td style="padding-left:1em;font-weight:800">
+                $363
+              </td></tr></tfoot></table> <table style="width:100%;border-collapse:collapse;margin-top:5em"><tbody><tr style="text-align:left"><th style="width:50%;padding-bottom:0.5em;border-bottom:2px solid black;font-weight:800;padding-left:0px">
+              Payment Method
+            </th> <th style="width:50%;padding-bottom:0.5em;border-bottom:2px solid black"></th></tr> <tr><td style="padding-top:0.5em;font-weight:600">
+              BSB
+            </td> <td style="padding-top:0.5em;padding-left:0.5em;border-left:2px solid black">
+              040 304
+            </td></tr> <tr><td style="padding-top:0.5em;font-weight:600">
+              Account Number
+            </td> <td style="padding-top:0.5em;padding-left:0.5em;border-left:2px solid black">
+              3423 2342
+            </td></tr> <tr><td style="padding-top:0.5em;font-weight:600">
+              ABN
+            </td> <td style="padding-top:0.5em;padding-left:0.5em;border-left:2px solid black">
+              30433 4323 34
+            </td></tr></tbody></table></div>`;
+
+
+      // The body needs to be base64url encoded.
+      const encodedMessage = btoa(message)
+
+      const reallyEncodedMessage = encodedMessage.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+
+      gapi.client.gmail.users.messages.send({
+          userId: 'me',
+          resource: {
+              // same response with any of these
+              raw: reallyEncodedMessage
+              // raw: encodedMessage
+              // raw: message
+          }
+      }).then(function () { console.log("done!")});
     }
     gapi.load('client', () => {
 
@@ -33,7 +123,6 @@
       })
     }).then(() => {
       login()
-      console.log('success');
     }).catch((err) => {
       console.log(err);
     })
