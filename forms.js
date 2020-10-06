@@ -140,14 +140,19 @@ Vue.component('biller-form', {
   },
   methods: {
     update: function(){
+      this.show = true;
       if (this.value.displayName.length == 0){
         alert('Please provide your name.');
+        loader.show = false;
+
         return
       }
       fireAuth.updateUser(this.value).then((e) => {
-        this.$emit('input', this.value)
+        this.$emit('input', this.value);
       }).catch((err) => {
         alert(err);
+        loader.show = false;
+        
         throw err;
       })
     },
@@ -220,19 +225,28 @@ Vue.component('add-client-form', {
   },
   methods: {
     add_client: function(){
+      this.show = true;
       if (this.value.displayName.length == 0){
         alert('Please provide the clients name.');
+        loader.show = false;
+
         return
       }
       if (this.value.email.length == 0){
         alert('Please provide the clients email.')
+        loader.show = false;
+
       }
       fireAuth.addClient(this.value).then((e) => {
         let client_f = e.data;
         alert(client_f.message);
+        loader.show = false;
+
         this.$emit('input', client_f);
       }).catch((err) => {
         alert(err);
+        loader.show = false;
+
         throw err;
       })
     },
@@ -343,11 +357,16 @@ Vue.component('add-recipient', {
   `,
   methods: {
     set_recipient: function(client){
+      loader.show = true;
       fireAuth.getClient(client.email).then((e) => {
         let client_f = e.data
+        loader.show = false;
+
         this.$emit('input', client_f)
       }).catch((err) => {
         alert(err);
+        loader.show = false;
+
       })
     },
     edit: function(client){
@@ -355,7 +374,10 @@ Vue.component('add-recipient', {
       this.client = client;
     },
     delete_client: function(client){
-      fireAuth.removeClient(client);
+      loader.show = true;
+      fireAuth.removeClient(client).then(() => {
+        loader.show = false;
+      })
     }
   },
   created(){
@@ -549,6 +571,7 @@ Vue.component('invoice', {
   created(){
     fireAuth.addEventListener('user', (user) => {
       this.biller = user;
+      loader.hide();
     })
   },
   template: `
@@ -735,4 +758,52 @@ Vue.component('invoice', {
     </div>
   </div>
 `
+})
+
+Vue.component('wave-loader', {
+  props: {
+    show: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data: function() {
+    return {
+      t: 0
+    }
+  },
+  computed: {
+    d: function(){
+      let f = 2
+      let y = (i) => { return (Math.sin(this.t + i) + Math.sin(this.t + i* Math.sin(this.t/5)*2))/1.5}
+      let d = `M${0},${y(0)}`
+      for (var i = 0; i < 2*Math.PI; i+=0.1){
+        d += `L${i},${y(i)}`
+      }
+      return d
+    }
+  },
+  methods: {
+    start: function (){
+      let l_time = null;
+      next = (time) => {
+        this.t = time/500;
+        if (this.show){
+          window.requestAnimationFrame(next)
+        }
+      }
+      window.requestAnimationFrame(next)
+    }
+  },
+  watch: {
+    show: function (){
+      if (this.show){
+        this.start()
+      }
+    }
+  },
+  created(){
+    this.start();
+  },
+  template: `<div style = "display: grid;position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background: #10101588; backdrop-filter:blur(25px); -webkit-backdrop-filter: blur(25px)"><svg style = "display: block; margin: auto" width = "30vw" viewBox = "-1 -2 8.2 4"><path style = "fill: none; stroke: white; stroke-linecap: round; stroke-width: 0.3" :d = "d"></path></svg></div>`
 })

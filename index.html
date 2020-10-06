@@ -15,6 +15,14 @@
   <script src="./forms.js"></script>
 
   <body>
+    <div id = "wave-loader">
+      <div v-if = "show" style = "display: grid;position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background: #10101588; backdrop-filter:blur(25px); -webkit-backdrop-filter: blur(25px)">
+        <svg style = "display: block; margin: auto" width = "30vw" viewBox = "-1 -2 8.2 4">
+          <path style = "fill: none; stroke: white; stroke-linecap: round; stroke-width: 0.3" :d = "d">
+          </path>
+        </svg>
+      </div>
+    </div>
     <div id = "vue-el">
       <invoice>
       </invoice>
@@ -24,6 +32,55 @@
     let fireAuth = new FireAuth();
     let doc = new Vue({
       el: '#vue-el'
+    })
+    let loader = new Vue ({
+      el: '#wave-loader',
+      data: {
+        t: 0,
+        show: true
+      },
+      computed: {
+        styler: function(){
+          if (this.show){
+            return `opacity: 0`
+          }else{
+            return ``
+          }
+        },
+        d: function(){
+          let f = 2
+          let y = (i) => { return (Math.sin(this.t + i) + Math.sin(this.t + i* Math.sin(this.t/5)*2))/1.5}
+          let d = `M${0},${y(0)}`
+          for (var i = 0; i < 2*Math.PI; i+=0.1){
+            d += `L${i},${y(i)}`
+          }
+          return d
+        }
+      },
+      methods: {
+        show: function (){
+          next = (time) => {
+            this.t = time/500;
+            if (this.show){
+              window.requestAnimationFrame(next)
+            }
+          }
+          window.requestAnimationFrame(next)
+        },
+        hide: function(){
+          this.show = false;
+        }
+      },
+      watch: {
+        show: function (){
+          if (this.show){
+            this.start()
+          }
+        }
+      },
+      created(){
+        this.show();
+      },
     })
   </script>
   <style type = "text/css">
