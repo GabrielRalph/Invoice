@@ -617,7 +617,7 @@ Vue.component('invoice', {
               {{biller.phoneNumber}}
             </td>
             <td style = "padding-left: 1em">
-              {{biller.city}}
+              {{biller.City}}
             </td>
           </tr>
           <tr>
