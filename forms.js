@@ -410,7 +410,7 @@ Vue.component('v-input', {
       if (typeof this.value === 'undefined' || this.value.length == 0 && !this.focus){
         style += `top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1em;`
       }else{
-        style += `top: 1.5px; right: 2em; transform: translate(0, -100%); font-size: 0.7em; padding: 0.1em 0.5em; border: 2px solid white; border-radius:1em 1em 0 0;border-bottom: none;`
+        style += `top: 1.5px; right: 2em; transform: translate(0, -100%); font-size: 0.7em; padding: 0.1em 0.5em; border: var(--bs) solid white; border-radius:1em 1em 0 0;border-bottom: none;`
       }
       return style
     }
@@ -605,7 +605,7 @@ Vue.component('invoice', {
         </div>
         <table style = "float: right; font-size: 0.8em; font-weight: light; border-collapse: collapse; margin-top: 0.8em;">
           <tr>
-            <td style = "border-right: 2px solid black; padding-right: 1em">
+            <td style = "border-right: var(--bs) solid black; padding-right: 1em">
               {{biller.displayName}}
             </td>
             <td style = "padding-left: 1em">
@@ -613,7 +613,7 @@ Vue.component('invoice', {
             </td>
           </tr>
           <tr>
-            <td style = "border-right: 2px solid black; padding-right: 1em">
+            <td style = "border-right: var(--bs) solid black; padding-right: 1em">
               {{biller.phoneNumber}}
             </td>
             <td style = "padding-left: 1em">
@@ -629,13 +629,13 @@ Vue.component('invoice', {
 
         <table style = "width: 100%; border-collapse: collapse; margin-bottom: 5em;">
           <tr style = "text-align: left">
-            <th colspan="2" style = "border-bottom: 2px solid black; padding-bottom: 0.5em; padding-left:0">
+            <th colspan="2" style = "border-bottom: var(--bs) solid black; padding-bottom: 0.5em; padding-left:0">
               Invoice Recipient
               <icon v-if = "edit" @click = "show_form = 'add-recipient'">edit</icon>
             </th>
           </tr>
           <tr>
-            <td style = "border-right: 2px solid black; padding-right: 1em; padding-top: 0.3em">
+            <td style = "border-right: var(--bs) solid black; padding-right: 1em; padding-top: 0.3em">
               {{recipient.displayName}}
             </td>
             <td style = "padding-left: 1em">
@@ -643,7 +643,7 @@ Vue.component('invoice', {
             </td>
           </tr>
           <tr>
-            <td style = "border-right: 2px solid black; padding-right: 1em; padding-top: 0.3em">
+            <td style = "border-right: var(--bs) solid black; padding-right: 1em; padding-top: 0.3em">
               {{recipient.address}}
             </td>
             <td style = "padding-left: 1em">
@@ -651,7 +651,7 @@ Vue.component('invoice', {
             </td>
           </tr>
           <tr>
-            <td style = "border-right: 2px solid black; padding-right: 1em; padding-top: 0.3em">
+            <td style = "border-right: var(--bs) solid black; padding-right: 1em; padding-top: 0.3em">
               {{recipient.city}}
             </td>
             <td style = "padding-left: 1em">
@@ -662,19 +662,19 @@ Vue.component('invoice', {
         <table style = "width: 100%; border-collapse: collapse; margin-bottom: 5em">
           <thead>
             <tr>
-              <th style = "width: 50%; border-bottom: 2px solid black; padding: 0 0 0.5em 0; text-align: left">
+              <th style = "width: 50%; border-bottom: var(--bs) solid black; padding: 0 0 0.5em 0; text-align: left">
                 Description
               </th>
-              <th style = "width: 20%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+              <th style = "width: 20%; border-bottom: var(--bs) solid black; padding: 0 0 0.5em 0.5em; text-align: left">
                 Date
               </th>
-              <th style = "width: 10%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+              <th style = "width: 10%; border-bottom: var(--bs) solid black; padding: 0 0 0.5em 0.5em; text-align: left">
                 Rate
               </th>
-              <th style = "width: 10%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+              <th style = "width: 10%; border-bottom: var(--bs) solid black; padding: 0 0 0.5em 0.5em; text-align: left">
                 Qty
               </th>
-              <th style = "width: 10%; border-bottom: 2px solid black; padding: 0 0 0.5em 0.5em; text-align: left">
+              <th style = "width: 10%; border-bottom: var(--bs) solid black; padding: 0 0 0.5em 0.5em; text-align: left">
                 Total
               </th>
             </tr>
@@ -685,29 +685,29 @@ Vue.component('invoice', {
                 {{item.description}}
                 <icon v-if = "edit" @click = "remove_item(i)">delete</icon>
               </td>
-              <td style = "padding-left: 0.5em; border-left: 2px solid black">
+              <td style = "padding-left: 0.5em; border-left: var(--bs) solid black">
                 {{item.date}}
               </td>
-              <td style = "padding-left: 0.5em; border-left: 2px solid black">
+              <td style = "padding-left: 0.5em; border-left: var(--bs) solid black">
                 $\{{item.rate}}
               </td>
-              <td style = "padding-left: 0.5em; border-left: 2px solid black">
+              <td style = "padding-left: 0.5em; border-left: var(--bs) solid black">
                 {{item.qty}}
               </td>
-              <td style = "padding-left: 0.5em; border-left: 2px solid black">
+              <td style = "padding-left: 0.5em; border-left: var(--bs) solid black">
                 $\{{item.qty * item.rate}}
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <th colspan = "4" style = "padding-bottom: 1em; border-bottom: 2px solid black">
+              <th colspan = "4" style = "padding-bottom: 1em; border-bottom: var(--bs) solid black">
                 <icon v-if = "edit" float = "left" @click = "show_form = 'add-item-form'">add</icon>
               </th>
-              <th style = "padding-bottom: 1em; border-bottom: 2px solid black"></th>
+              <th style = "padding-bottom: 1em; border-bottom: var(--bs) solid black"></th>
             </tr>
             <tr>
-              <td colspan="4" style = "text-align: right; padding-right: 1em; border-right: 2px solid black">
+              <td colspan="4" style = "text-align: right; padding-right: 1em; border-right: var(--bs) solid black">
                 <b>
                   Grand Total
                 </b>
@@ -720,10 +720,10 @@ Vue.component('invoice', {
         </table>
         <table :style = "print ? 'position: absolute; bottom: 4em; left: 4em; width: calc( 100% - 8em ); border-collapse: collapse;' : 'margin-top: 5em; width: 100%; border-collapse: collapse;'">
           <tr style = "text-align: left">
-            <th style = "width: 50%; padding-bottom: 0.5em; border-bottom: 2px solid black; font-weight: 800; padding-left: 0">
+            <th style = "width: 50%; padding-bottom: 0.5em; border-bottom: var(--bs) solid black; font-weight: 800; padding-left: 0">
               Payment Method
             </th>
-            <th style = "width: 50%; padding-bottom: 0.5em; border-bottom: 2px solid black">
+            <th style = "width: 50%; padding-bottom: 0.5em; border-bottom: var(--bs) solid black">
             </th>
           </tr>
 
@@ -731,7 +731,7 @@ Vue.component('invoice', {
             <td style = "padding-top: 0.5em; font-weight: 600">
               BSB
             </td>
-            <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: 2px solid black">
+            <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: var(--bs) solid black">
               {{biller.bsb}}
             </td>
           </tr>
@@ -740,7 +740,7 @@ Vue.component('invoice', {
             <td style = "padding-top: 0.5em; font-weight: 600">
               Account Number
             </td>
-            <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: 2px solid black">
+            <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: var(--bs) solid black">
               {{biller.accountNo}}
             </td>
           </tr>
@@ -749,7 +749,7 @@ Vue.component('invoice', {
             <td style = "padding-top: 0.5em; font-weight: 600">
               ABN
             </td>
-            <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: 2px solid black">
+            <td  style = "padding-top: 0.5em; padding-left: 0.5em; border-left: var(--bs) solid black">
               {{biller.abn}}
             </td>
           </tr>
