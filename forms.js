@@ -1,3 +1,6 @@
+import { FireAuth } from "./config.js"; 
+let fireAuth = new FireAuth();
+
 let ICON_SVGS = {
   edit: `   <path d="M171.6,426.3c-4.8-1.8-9.2-4-13.1-6.4l2.9,27.7c0.2,2.2,2.8,3.1,4.4,1.6l20.4-19.2C181.6,429.4,176.6,428.1,171.6,426.3z"/>
             <path d="M349.6,94.7c-6.2-18-20.2-33.3-39.5-40.5c-18.9-7.1-39-4.9-55.4,4.2L151,336.5c-0.6,1.5-0.8,3.2-0.6,4.8l6.3,61.2c3.6,4,10,8.7,19.2,12.1c9.7,3.6,17.9,4.2,23.3,3.3l44-41.3c1.5-1.4,2.7-3.2,3.4-5.2L349.6,94.7z M159.4,349.1L263.7,69.4l13.1,9L159.4,349.1z"/>`,
@@ -570,6 +573,7 @@ Vue.component('invoice', {
   },
   created(){
     fireAuth.addEventListener('user', (user) => {
+      console.log("here");
       this.biller = user;
       loader.hide();
     })
@@ -757,22 +761,75 @@ Vue.component('invoice', {
       </div>
     </div>
   </div>
-`
+`,
 })
 
-Vue.component('wave-loader', {
-  props: {
-    show: {
-      type: Boolean,
-      default: true
-    }
-  },
-  data: function() {
-    return {
-      t: 0
-    }
+// Vue.component('wave-loader', {
+//   props: {
+//     show: {
+//       type: Boolean,
+//       default: true
+//     }
+//   },
+//   data: function() {
+//     return {
+//       t: 0
+//     }
+//   },
+//   computed: {
+//     d: function(){
+//       let f = 2
+//       let y = (i) => { return (Math.sin(this.t + i) + Math.sin(this.t + i* Math.sin(this.t/5)*2))/1.5}
+//       let d = `M${0},${y(0)}`
+//       for (var i = 0; i < 2*Math.PI; i+=0.1){
+//         d += `L${i},${y(i)}`
+//       }
+//       return d
+//     }
+//   },
+//   methods: {
+//     start: function (){
+//       let l_time = null;
+//       next = (time) => {
+//         this.t = time/500;
+//         if (this.show){
+//           window.requestAnimationFrame(next)
+//         }
+//       }
+//       window.requestAnimationFrame(next)
+//     }
+//   },
+//   watch: {
+//     show: function (){
+//       if (this.show){
+//         this.start()
+//       }
+//     }
+//   },
+//   created(){
+//     this.start();
+//   },
+//   template: `<div style = "display: grid;position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background: #10101588; backdrop-filter:blur(25px); -webkit-backdrop-filter: blur(25px)"><svg style = "display: block; margin: auto" width = "30vw" viewBox = "-1 -2 8.2 4"><path style = "fill: none; stroke: white; stroke-linecap: round; stroke-width: 0.3" :d = "d"></path></svg></div>`
+// })
+
+
+let doc = new Vue({
+  el: '#vue-el'
+})
+let loader = new Vue ({
+  el: '#wave-loader',
+  data: {
+    t: 0,
+    show: true
   },
   computed: {
+    styler: function(){
+      if (this.show){
+        return `opacity: 0`
+      }else{
+        return ``
+      }
+    },
     d: function(){
       let f = 2
       let y = (i) => { return (Math.sin(this.t + i) + Math.sin(this.t + i* Math.sin(this.t/5)*2))/1.5}
@@ -785,14 +842,17 @@ Vue.component('wave-loader', {
   },
   methods: {
     start: function (){
-      let l_time = null;
-      next = (time) => {
+      this.show = true;
+      let next = (time) => {
         this.t = time/500;
         if (this.show){
           window.requestAnimationFrame(next)
         }
       }
       window.requestAnimationFrame(next)
+    },
+    hide: function(){
+      this.show = false;
     }
   },
   watch: {
@@ -805,5 +865,4 @@ Vue.component('wave-loader', {
   created(){
     this.start();
   },
-  template: `<div style = "display: grid;position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background: #10101588; backdrop-filter:blur(25px); -webkit-backdrop-filter: blur(25px)"><svg style = "display: block; margin: auto" width = "30vw" viewBox = "-1 -2 8.2 4"><path style = "fill: none; stroke: white; stroke-linecap: round; stroke-width: 0.3" :d = "d"></path></svg></div>`
 })
