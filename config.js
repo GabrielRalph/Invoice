@@ -74,10 +74,7 @@ class FireAuth {
     FB.onAuthStateChanged((user) => {
       //If no user then navigate to the login widget
       if (!user){
-        alert("click to sign in")
-        window.onclick = () => {
-          this.signIn();
-        }
+        this.signIn();
       }else{
         this.getUser(user)
 
@@ -95,16 +92,14 @@ class FireAuth {
   }
 
   signIn(){
-    window.onclick = null;
-    // if (window.confirm("Sign in to continue?")) {
-      alert("siging in")
+    if (window.confirm("Sign in to continue?")) {
       try {
         const provider = new FB.GoogleAuthProvider();
         FB.signInWithPopup(provider);
       } catch (e) {
         alert(e);
       }
-    // }
+    }
   }
 
   signOut(){
