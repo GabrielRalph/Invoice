@@ -92,8 +92,10 @@ class FireAuth {
   }
 
   signIn(){
-    const provider = new FB.GoogleAuthProvider();
-    FB.signInWithPopup(provider);
+    if (window.confirm("Sign in to continue?")) {
+      const provider = new FB.GoogleAuthProvider();
+      FB.signInWithPopup(provider);
+    }
   }
 
   signOut(){
